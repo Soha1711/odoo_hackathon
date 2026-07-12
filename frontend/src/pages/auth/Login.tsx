@@ -19,7 +19,7 @@ type LoginFormValues = zod.infer<typeof loginSchema>;
 const demoAccounts = [
   { label: 'Admin', email: 'admin@ecosphere.com', password: 'admin123', icon: Shield, color: 'text-emerald-500' },
   { label: 'Manager', email: 'manager@ecosphere.com', password: 'manager123', icon: Users, color: 'text-blue-500' },
-  { label: 'Employee', email: 'employee@ecosphere.com', password: 'employee123', icon: Leaf, color: 'text-purple-500' },
+  { label: 'Employee', email: 'employee@ecosphere.com', password: 'employee123', icon: Leaf, color: 'text-teal-500' },
 ];
 
 export function Login() {

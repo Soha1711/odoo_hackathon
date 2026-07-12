@@ -8,6 +8,7 @@ import { FileUpload } from '../../components/ui/FileUpload';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { toast } from '../../components/ui/Toast';
 import { Heart, Calendar, Check, X, ClipboardCheck } from 'lucide-react';
+import { SearchBar } from '../../components/ui/SearchBar';
 import { useAuthContext } from '../../context/AuthContext';
 
 export function Social() {
@@ -17,8 +18,23 @@ export function Social() {
   const [proofUrl, setProofUrl] = useState('');
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const [reviewingId, setReviewingId] = useState<string | null>(null);
+  const [activitySearch, setActivitySearch] = useState('');
+  const [approvalSearch, setApprovalSearch] = useState('');
 
   const isManagement = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+
+  const filteredActivities = activities.filter((a) =>
+    a.title.toLowerCase().includes(activitySearch.toLowerCase()) ||
+    a.description.toLowerCase().includes(activitySearch.toLowerCase())
+  );
+
+  const filteredParticipations = participations.filter((p) => {
+    if (p.approvalStatus !== 'PENDING') return false;
+    const name = `${p.user?.firstName || ''} ${p.user?.lastName || ''}`.toLowerCase();
+    const title = (p.csrActivity?.title || '').toLowerCase();
+    const query = approvalSearch.toLowerCase();
+    return name.includes(query) || title.includes(query);
+  });
 
   const handleJoinSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,10 +84,13 @@ export function Social() {
 
       {/* Grid of CSR activities */}
       <div>
-        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center">
-          <Heart className="h-5 w-5 mr-2 text-red-500" />
-          Scheduled CSR Activities
-        </h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold text-foreground flex items-center">
+            <Heart className="h-5 w-5 mr-2 text-red-500" />
+            Scheduled CSR Activities
+          </h3>
+          <SearchBar value={activitySearch} onChange={setActivitySearch} placeholder="Search activities..." />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {isLoadingActivities ? (
             <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -79,14 +98,14 @@ export function Social() {
               <Skeleton className="h-52" />
               <Skeleton className="h-52" />
             </div>
-          ) : activities.length === 0 ? (
+          ) : filteredActivities.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center py-12 text-muted-foreground">
               <Heart className="h-10 w-10 mb-3 text-muted-foreground/30" />
-              <p className="text-sm font-medium">No CSR activities scheduled yet.</p>
-              <p className="text-xs text-muted-foreground/70 mt-1">Check back later for upcoming volunteer opportunities.</p>
+              <p className="text-sm font-medium">No matching CSR activities found.</p>
+              <p className="text-xs text-muted-foreground/70 mt-1">Try adjusting your search terms.</p>
             </div>
           ) : (
-            activities.map((act) => {
+            filteredActivities.map((act) => {
               const hasJoined = participations.some((p) => p.csrActivityId === act.id);
               return (
                 <Card key={act.id} hoverable className="flex flex-col justify-between h-full">
@@ -101,7 +120,7 @@ export function Social() {
                         </Badge>
                       </div>
 
-                      <h4 className="text-base font-bold text-foreground truncate">{act.title}</h4>
+                      <h4 className="text-base font-bold text-foreground line-clamp-2">{act.title}</h4>
                       <p className="text-xs text-muted-foreground line-clamp-3 mt-1.5">{act.description}</p>
                     </div>
 
@@ -136,29 +155,31 @@ export function Social() {
       {/* Management Review Section */}
       {isManagement && (
         <div>
-          <h3 className="text-lg font-bold text-foreground mb-4 flex items-center">
+          <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold text-foreground flex items-center">
             <ClipboardCheck className="h-5 w-5 mr-2 text-amber-500" />
             Pending Approvals
           </h3>
+          <SearchBar value={approvalSearch} onChange={setApprovalSearch} placeholder="Search by name or activity..." />
+        </div>
           <div className="space-y-4">
             {isLoadingParticipations ? (
               <div className="space-y-4">
                 <Skeleton className="h-20 w-full" />
                 <Skeleton className="h-20 w-full" />
               </div>
-            ) : participations.filter((p) => p.approvalStatus === 'PENDING').length === 0 ? (
+            ) : filteredParticipations.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
                 <ClipboardCheck className="h-8 w-8 mb-2 text-emerald-500" />
-                <p className="text-sm font-medium">All caught up — no pending CSR approvals.</p>
+                <p className="text-sm font-medium">{approvalSearch ? 'No matching approvals found.' : 'All caught up — no pending CSR approvals.'}</p>
               </div>
             ) : (
-              participations
-                .filter((p) => p.approvalStatus === 'PENDING')
+              filteredParticipations
                 .map((part) => (
                   <Card key={part.id} className="p-4 flex items-center justify-between border-l-4 border-l-amber-500">
                     <div>
                       <h5 className="text-sm font-semibold text-foreground">{part.csrActivity?.title}</h5>
-                      <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
                         Logged by: {part.user?.firstName} {part.user?.lastName} ({part.user?.email})
                       </p>
                       {part.proofUrl && (

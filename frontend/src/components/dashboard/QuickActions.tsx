@@ -33,7 +33,7 @@ export function QuickActions() {
 
         <Button
           variant="outline"
-          className="h-16 flex flex-col items-center justify-center space-y-1 hover:bg-purple-500/5 hover:border-purple-500/30 text-purple-600 border border-border/60"
+          className="h-16 flex flex-col items-center justify-center space-y-1 hover:bg-teal-500/5 hover:border-teal-500/30 text-teal-600 border border-border/60"
           onClick={() => navigate(AppRoutes.SOCIAL)}
         >
           <FileText className="h-4.5 w-4.5" />

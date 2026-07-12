@@ -16,6 +16,7 @@ import { DatePicker } from '../../components/ui/DatePicker';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { toast } from '../../components/ui/Toast';
 import { Leaf, Plus, Target, FileText } from 'lucide-react';
+import { SearchBar } from '../../components/ui/SearchBar';
 
 const carbonSchema = zod.object({
   sourceType: zod.enum(['PURCHASE', 'MANUFACTURING', 'EXPENSE', 'FLEET'], {
@@ -34,6 +35,8 @@ type CarbonFormValues = zod.infer<typeof carbonSchema>;
 export function Environmental() {
   const { transactions, goals, logTransaction, isLoadingTransactions, isLoadingGoals } = useEnvironmental();
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+  const [goalSearch, setGoalSearch] = useState('');
+  const [txSearch, setTxSearch] = useState('');
 
   // Fetch departments
   const { data: deptsData } = useQuery({
@@ -51,6 +54,16 @@ export function Environmental() {
     label: `${d.name} (${d.code})`,
     value: d.id,
   }));
+
+  const filteredGoals = goals.filter((g) =>
+    g.title.toLowerCase().includes(goalSearch.toLowerCase())
+  );
+
+  const filteredTransactions = transactions.filter((tx) =>
+    tx.sourceId.toLowerCase().includes(txSearch.toLowerCase()) ||
+    tx.sourceType.toLowerCase().includes(txSearch.toLowerCase()) ||
+    (tx.department?.name || '').toLowerCase().includes(txSearch.toLowerCase())
+  );
 
   const factorOptions = (factorsData?.data || []).map((f: any) => ({
     label: `${f.name} (${f.factor} kg CO₂e/${f.unit})`,
@@ -102,10 +115,13 @@ export function Environmental() {
 
       {/* Active Goals Grid */}
       <div>
-        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center">
-          <Target className="h-5 w-5 mr-2 text-emerald-500" />
-          Target Benchmarks
-        </h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold text-foreground flex items-center">
+            <Target className="h-5 w-5 mr-2 text-emerald-500" />
+            Target Benchmarks
+          </h3>
+          <SearchBar value={goalSearch} onChange={setGoalSearch} placeholder="Search goals..." />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {isLoadingGoals ? (
             <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -113,24 +129,27 @@ export function Environmental() {
               <Skeleton className="h-40" />
               <Skeleton className="h-40" />
             </div>
-          ) : goals.length === 0 ? (
+          ) : filteredGoals.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center py-12 text-muted-foreground">
               <Target className="h-10 w-10 mb-3 text-muted-foreground/30" />
-              <p className="text-sm font-medium">No environmental goals established yet.</p>
-              <p className="text-xs text-muted-foreground/70 mt-1">Set targets to track sustainability progress across departments.</p>
+              <p className="text-sm font-medium">No matching goals found.</p>
+              <p className="text-xs text-muted-foreground/70 mt-1">Try adjusting your search terms.</p>
             </div>
           ) : (
-            goals.map((goal) => <GoalCard key={goal.id} goal={goal} />)
+            filteredGoals.map((goal) => <GoalCard key={goal.id} goal={goal} />)
           )}
         </div>
       </div>
 
       {/* Transaction Logs */}
       <div>
-        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center">
-          <FileText className="h-5 w-5 mr-2 text-emerald-500" />
-          Carbon Emission Register
-        </h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold text-foreground flex items-center">
+            <FileText className="h-5 w-5 mr-2 text-emerald-500" />
+            Carbon Emission Register
+          </h3>
+          <SearchBar value={txSearch} onChange={setTxSearch} placeholder="Search transactions..." />
+        </div>
         <div className="space-y-4">
           {isLoadingTransactions ? (
             <div className="space-y-4">
@@ -138,14 +157,14 @@ export function Environmental() {
               <Skeleton className="h-28 w-full" />
               <Skeleton className="h-28 w-full" />
             </div>
-          ) : transactions.length === 0 ? (
+          ) : filteredTransactions.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
               <FileText className="h-10 w-10 mb-3 text-muted-foreground/30" />
-              <p className="text-sm font-medium">No carbon transactions logged yet.</p>
-              <p className="text-xs text-muted-foreground/70 mt-1">Click "Log Carbon" to start tracking emissions.</p>
+              <p className="text-sm font-medium">No matching transactions found.</p>
+              <p className="text-xs text-muted-foreground/70 mt-1">Try adjusting your search terms.</p>
             </div>
           ) : (
-            transactions.map((tx) => <CarbonCard key={tx.id} transaction={tx} />)
+            filteredTransactions.map((tx) => <CarbonCard key={tx.id} transaction={tx} />)
           )}
         </div>
       </div>

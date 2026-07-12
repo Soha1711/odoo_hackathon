@@ -40,10 +40,10 @@ export function MetricCard({
   }
 
   return (
-    <Card hoverable className={cn('overflow-hidden relative', className)}>
+    <Card hoverable className={cn('relative', className)}>
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
+          <p className="text-sm font-medium text-muted-foreground line-clamp-1">{title}</p>
           {icon && <div className="text-muted-foreground p-2 bg-secondary/50 rounded-lg">{icon}</div>}
         </div>
 

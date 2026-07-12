@@ -29,14 +29,14 @@ export function ActivityFeed({ activities = [] }: ActivityFeedProps) {
                 <div key={act.id} className="relative pl-6">
                   {/* Bullet indicator */}
                   <span className={`absolute -left-[14px] top-1 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card shadow-sm ${
-                    isCarbon ? 'text-emerald-500' : isCsr ? 'text-purple-500' : 'text-blue-500'
+                    isCarbon ? 'text-emerald-500' : isCsr ? 'text-teal-500' : 'text-blue-500'
                   }`}>
                     {isCarbon ? <Leaf className="h-3.5 w-3.5" /> : isCsr ? <FileText className="h-3.5 w-3.5" /> : <Shield className="h-3.5 w-3.5" />}
                   </span>
 
                   <div>
-                    <h6 className="text-sm font-semibold text-foreground leading-tight truncate">{act.title}</h6>
-                    <p className="text-xs text-muted-foreground mt-0.5 truncate">{act.subtitle}</p>
+                    <h6 className="text-sm font-semibold text-foreground leading-tight line-clamp-2">{act.title}</h6>
+                    <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{act.subtitle}</p>
                     <span className="text-[10px] text-muted-foreground/80 font-medium block mt-1">
                       {new Date(act.date).toLocaleDateString()}
                     </span>

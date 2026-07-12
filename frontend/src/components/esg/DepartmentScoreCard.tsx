@@ -9,7 +9,7 @@ interface DepartmentScoreCardProps {
 
 export function DepartmentScoreCard({ department, score = 0 }: DepartmentScoreCardProps) {
   return (
-    <Card hoverable className="overflow-hidden">
+    <Card hoverable>
       <CardContent className="p-5 flex items-center justify-between">
         <div className="space-y-2">
           <div className="flex items-center space-x-2">

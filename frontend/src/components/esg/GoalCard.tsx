@@ -16,11 +16,11 @@ export function GoalCard({ goal, onUpdateClick, canUpdate = false }: GoalCardPro
   const isCompleted = goal.status === 'COMPLETED' || percentage >= 100;
 
   return (
-    <Card hoverable className="overflow-hidden">
+    <Card hoverable>
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h4 className="text-base font-semibold text-foreground truncate max-w-[200px]">{goal.title}</h4>
+            <h4 className="text-base font-semibold text-foreground line-clamp-2">{goal.title}</h4>
           </div>
           <Badge variant={isCompleted ? 'success' : goal.status === 'ARCHIVED' ? 'danger' : 'default'}>
             {goal.status}
@@ -51,7 +51,7 @@ export function GoalCard({ goal, onUpdateClick, canUpdate = false }: GoalCardPro
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 px-2 hover:bg-muted text-primary hover:text-primary-foreground"
+                className="h-7 px-2 hover:bg-emerald-500/10 text-primary"
                 onClick={() => onUpdateClick(goal)}
               >
                 <Edit className="h-3.5 w-3.5 mr-1" />

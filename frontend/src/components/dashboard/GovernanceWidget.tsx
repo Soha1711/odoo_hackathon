@@ -29,7 +29,7 @@ export function GovernanceWidget({ issues = [] }: GovernanceWidgetProps) {
             openIssues.map((issue) => (
               <div key={issue.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/40 transition-colors">
                 <div>
-                  <h6 className="text-sm font-semibold text-foreground truncate max-w-[180px]">{issue.title}</h6>
+                  <h6 className="text-sm font-semibold text-foreground line-clamp-2">{issue.title}</h6>
                   <span className="text-[10px] text-muted-foreground flex items-center space-x-1.5 mt-0.5">
                     <ShieldAlert className="h-3.5 w-3.5 text-amber-500" />
                     <span>Due: {new Date(issue.dueDate).toLocaleDateString()}</span>

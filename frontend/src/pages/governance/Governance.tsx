@@ -16,6 +16,7 @@ import { Skeleton } from '../../components/ui/Skeleton';
 import { toast } from '../../components/ui/Toast';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { Shield, Plus, Calendar, FileCheck, AlertTriangle, ClipboardList } from 'lucide-react';
+import { SearchBar } from '../../components/ui/SearchBar';
 import { useAuthContext } from '../../context/AuthContext';
 
 const auditSchema = zod.object({
@@ -33,6 +34,9 @@ export function Governance() {
   const { user } = useAuthContext();
   const { policies, acks, audits, issues, acknowledgePolicy, createAudit, isLoadingPolicies, isLoadingAudits } = useGovernance();
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
+  const [policySearch, setPolicySearch] = useState('');
+  const [auditSearch, setAuditSearch] = useState('');
+  const [issueSearch, setIssueSearch] = useState('');
 
   // Fetch departments
   const { data: deptsData } = useQuery({
@@ -46,6 +50,22 @@ export function Governance() {
   }));
 
   const isManagement = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+
+  const filteredPolicies = policies.filter((p) =>
+    p.title.toLowerCase().includes(policySearch.toLowerCase()) ||
+    p.description.toLowerCase().includes(policySearch.toLowerCase())
+  );
+
+  const filteredAudits = audits.filter((a) =>
+    a.auditorName.toLowerCase().includes(auditSearch.toLowerCase()) ||
+    a.findings.toLowerCase().includes(auditSearch.toLowerCase()) ||
+    (a.department?.name || '').toLowerCase().includes(auditSearch.toLowerCase())
+  );
+
+  const filteredIssues = issues.filter((i) =>
+    i.title.toLowerCase().includes(issueSearch.toLowerCase()) ||
+    i.description.toLowerCase().includes(issueSearch.toLowerCase())
+  );
 
   const {
     register,
@@ -94,6 +114,10 @@ export function Governance() {
 
         {/* Policies Content */}
         <TabsContent value="policies" className="space-y-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-foreground">Policies & Directives</h3>
+            <SearchBar value={policySearch} onChange={setPolicySearch} placeholder="Search policies..." />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {isLoadingPolicies ? (
               <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -101,14 +125,14 @@ export function Governance() {
                 <Skeleton className="h-48" />
                 <Skeleton className="h-48" />
               </div>
-            ) : policies.length === 0 ? (
+            ) : filteredPolicies.length === 0 ? (
               <div className="col-span-full flex flex-col items-center justify-center py-12 text-muted-foreground">
                 <FileCheck className="h-10 w-10 mb-3 text-muted-foreground/30" />
-                <p className="text-sm font-medium">No governance policies issued yet.</p>
-                <p className="text-xs text-muted-foreground/70 mt-1">Policies will appear here once published by management.</p>
+                <p className="text-sm font-medium">No matching policies found.</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">Try adjusting your search terms.</p>
               </div>
             ) : (
-              policies.map((p) => {
+              filteredPolicies.map((p) => {
                 const isAcked = acks.some((ack) => ack.policyId === p.id);
                 return (
                   <PolicyCard
@@ -127,12 +151,15 @@ export function Governance() {
         <TabsContent value="audits" className="space-y-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-bold text-foreground">Audit Register</h3>
-            {isManagement && (
-              <Button onClick={() => setIsAuditModalOpen(true)} className="flex items-center space-x-1.5">
-                <Plus className="h-4.5 w-4.5" />
-                <span>Log Audit</span>
-              </Button>
-            )}
+            <div className="flex items-center space-x-3">
+              <SearchBar value={auditSearch} onChange={setAuditSearch} placeholder="Search audits..." />
+              {isManagement && (
+                <Button onClick={() => setIsAuditModalOpen(true)} className="flex items-center space-x-1.5">
+                  <Plus className="h-4.5 w-4.5" />
+                  <span>Log Audit</span>
+                </Button>
+              )}
+            </div>
           </div>
 
           <div className="space-y-4">
@@ -141,14 +168,14 @@ export function Governance() {
                 <Skeleton className="h-24 w-full" />
                 <Skeleton className="h-24 w-full" />
               </div>
-            ) : audits.length === 0 ? (
+            ) : filteredAudits.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
                 <ClipboardList className="h-8 w-8 mb-2 text-muted-foreground/30" />
-                <p className="text-sm font-medium">No compliance audits recorded yet.</p>
-                <p className="text-xs text-muted-foreground/70 mt-1">Management can log audits to track department compliance.</p>
+                <p className="text-sm font-medium">{auditSearch ? 'No matching audits found.' : 'No compliance audits recorded yet.'}</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">{auditSearch ? 'Try adjusting your search terms.' : 'Management can log audits to track department compliance.'}</p>
               </div>
             ) : (
-              audits.map((a) => (
+              filteredAudits.map((a) => (
                 <div key={a.id} className="p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
                   <div>
                     <h5 className="text-sm font-semibold text-foreground">Audited by: {a.auditorName}</h5>
@@ -169,16 +196,19 @@ export function Governance() {
 
         {/* Issues Content */}
         <TabsContent value="issues" className="space-y-6">
-          <h3 className="text-lg font-bold text-foreground mb-4">Risk & Non-Compliance issues</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-foreground">Risk & Non-Compliance issues</h3>
+            <SearchBar value={issueSearch} onChange={setIssueSearch} placeholder="Search issues..." />
+          </div>
           <div className="space-y-4">
-            {issues.length === 0 ? (
+            {filteredIssues.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
                 <AlertTriangle className="h-8 w-8 mb-2 text-emerald-500" />
-                <p className="text-sm font-medium">No compliance issues registered.</p>
-                <p className="text-xs text-muted-foreground/70 mt-1">All governance checks are passing — great work!</p>
+                <p className="text-sm font-medium">{issueSearch ? 'No matching issues found.' : 'No compliance issues registered.'}</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">{issueSearch ? 'Try adjusting your search terms.' : 'All governance checks are passing — great work!'}</p>
               </div>
             ) : (
-              issues.map((issue) => (
+              filteredIssues.map((issue) => (
                 <div key={issue.id} className="p-4 bg-card border border-border rounded-xl flex justify-between items-center shadow-sm">
                   <div>
                     <h5 className="text-sm font-bold text-foreground">{issue.title}</h5>

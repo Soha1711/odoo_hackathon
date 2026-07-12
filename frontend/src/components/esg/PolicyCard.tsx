@@ -18,7 +18,7 @@ export function PolicyCard({
   isAcknowledging = false,
 }: PolicyCardProps) {
   return (
-    <Card hoverable className="overflow-hidden">
+    <Card hoverable>
       <CardContent className="p-6 flex flex-col justify-between h-full">
         <div>
           <div className="flex justify-between items-start mb-4">
@@ -30,7 +30,7 @@ export function PolicyCard({
             </Badge>
           </div>
 
-          <h4 className="text-base font-semibold text-foreground truncate">{policy.title}</h4>
+          <h4 className="text-base font-semibold text-foreground line-clamp-2">{policy.title}</h4>
           <p className="text-xs text-muted-foreground line-clamp-3 mt-1.5">{policy.description}</p>
         </div>
 

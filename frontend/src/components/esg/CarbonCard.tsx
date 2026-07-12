@@ -14,7 +14,7 @@ export function CarbonCard({ transaction, onDeleteClick, canDelete = false }: Ca
   const isExpense = transaction.sourceType === 'EXPENSE';
 
   return (
-    <Card hoverable className="overflow-hidden">
+    <Card hoverable>
       <CardContent className="p-5 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           {/* Custom icon matching scope source */}
@@ -27,7 +27,7 @@ export function CarbonCard({ transaction, onDeleteClick, canDelete = false }: Ca
           </div>
 
           <div>
-            <h5 className="text-sm font-semibold text-foreground">{transaction.sourceId}</h5>
+            <h5 className="text-sm font-semibold text-foreground line-clamp-1">{transaction.sourceId}</h5>
             <p className="text-xs text-muted-foreground mt-0.5">
               {transaction.quantity} {transaction.unit} &bull; {new Date(transaction.transactionDate).toLocaleDateString()}
             </p>

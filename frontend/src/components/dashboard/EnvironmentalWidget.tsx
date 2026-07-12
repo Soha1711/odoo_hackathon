@@ -31,7 +31,7 @@ export function EnvironmentalWidget({ goals = [] }: EnvironmentalWidgetProps) {
               return (
                 <div key={goal.id} className="space-y-1.5 p-2 rounded-lg hover:bg-muted/40 transition-colors">
                   <div className="flex justify-between items-center text-sm font-semibold">
-                    <span className="truncate max-w-[180px]">{goal.title}</span>
+                    <span className="line-clamp-2">{goal.title}</span>
                     <span className="text-xs text-muted-foreground">
                       {goal.currentValue}/{goal.targetValue} {goal.unit}
                     </span>

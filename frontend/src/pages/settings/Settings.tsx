@@ -12,6 +12,7 @@ import { Skeleton } from '../../components/ui/Skeleton';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { toast } from '../../components/ui/Toast';
 import { Settings as SettingsIcon, Plus, Building2, Calculator } from 'lucide-react';
+import { SearchBar } from '../../components/ui/SearchBar';
 import { useAuthContext } from '../../context/AuthContext';
 
 const deptSchema = zod.object({
@@ -27,6 +28,8 @@ export function Settings() {
   const { user } = useAuthContext();
   const queryClient = useQueryClient();
   const [isDeptModalOpen, setIsDeptModalOpen] = useState(false);
+  const [deptSearch, setDeptSearch] = useState('');
+  const [factorSearch, setFactorSearch] = useState('');
 
   const isManagement = user?.role === 'ADMIN' || user?.role === 'MANAGER';
 
@@ -41,6 +44,17 @@ export function Settings() {
     queryKey: ['settings_factors'],
     queryFn: () => environmentApi.getFactors(),
   });
+
+  const filteredDepts = (deptsData?.data || []).filter((dept: any) =>
+    dept.name.toLowerCase().includes(deptSearch.toLowerCase()) ||
+    dept.code.toLowerCase().includes(deptSearch.toLowerCase()) ||
+    (dept.head || '').toLowerCase().includes(deptSearch.toLowerCase())
+  );
+
+  const filteredFactors = (factorsData?.data || []).filter((factor: any) =>
+    factor.name.toLowerCase().includes(factorSearch.toLowerCase()) ||
+    factor.source.toLowerCase().includes(factorSearch.toLowerCase())
+  );
 
   // Create Department mutation
   const createDeptMutation = useMutation({
@@ -91,12 +105,15 @@ export function Settings() {
         <TabsContent value="departments" className="space-y-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-bold text-foreground">Registered Departments</h3>
-            {isManagement && (
-              <Button onClick={() => setIsDeptModalOpen(true)} className="flex items-center space-x-1.5">
-                <Plus className="h-4.5 w-4.5" />
-                <span>Add Department</span>
-              </Button>
-            )}
+            <div className="flex items-center space-x-3">
+              <SearchBar value={deptSearch} onChange={setDeptSearch} placeholder="Search departments..." />
+              {isManagement && (
+                <Button onClick={() => setIsDeptModalOpen(true)} className="flex items-center space-x-1.5">
+                  <Plus className="h-4.5 w-4.5" />
+                  <span>Add Department</span>
+                </Button>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -106,14 +123,14 @@ export function Settings() {
                 <Skeleton className="h-32" />
                 <Skeleton className="h-32" />
               </div>
-            ) : (deptsData?.data || []).length === 0 ? (
+            ) : filteredDepts.length === 0 ? (
               <div className="col-span-full flex flex-col items-center justify-center py-12 text-muted-foreground">
                 <Building2 className="h-10 w-10 mb-3 text-muted-foreground/30" />
-                <p className="text-sm font-medium">No departments registered.</p>
-                <p className="text-xs text-muted-foreground/70 mt-1">Add your first department to get started with ESG tracking.</p>
+                <p className="text-sm font-medium">{deptSearch ? 'No matching departments found.' : 'No departments registered.'}</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">{deptSearch ? 'Try adjusting your search terms.' : 'Add your first department to get started with ESG tracking.'}</p>
               </div>
             ) : (
-              (deptsData?.data || []).map((dept) => (
+              filteredDepts.map((dept) => (
                 <div key={dept.id} className="p-5 bg-card border border-border rounded-xl flex items-center justify-between hover:shadow-md transition-shadow">
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
@@ -134,7 +151,10 @@ export function Settings() {
 
         {/* Emission Factors Tab */}
         <TabsContent value="factors" className="space-y-6">
-          <h3 className="text-lg font-bold text-foreground mb-4">Emissions Conversion Table</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-foreground">Emissions Conversion Table</h3>
+            <SearchBar value={factorSearch} onChange={setFactorSearch} placeholder="Search factors..." />
+          </div>
           <div className="space-y-4">
             {isLoadingFactors ? (
               <div className="space-y-4">
@@ -142,14 +162,14 @@ export function Settings() {
                 <Skeleton className="h-20 w-full" />
                 <Skeleton className="h-20 w-full" />
               </div>
-            ) : (factorsData?.data || []).length === 0 ? (
+            ) : filteredFactors.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
                 <Calculator className="h-8 w-8 mb-2 text-muted-foreground/30" />
-                <p className="text-sm font-medium">No emission factors registered.</p>
-                <p className="text-xs text-muted-foreground/70 mt-1">Using platform default conversion factors.</p>
+                <p className="text-sm font-medium">{factorSearch ? 'No matching factors found.' : 'No emission factors registered.'}</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">{factorSearch ? 'Try adjusting your search terms.' : 'Using platform default conversion factors.'}</p>
               </div>
             ) : (
-              (factorsData?.data || []).map((factor: any) => (
+              filteredFactors.map((factor: any) => (
                 <div key={factor.id} className="p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
                   <div>
                     <h5 className="text-sm font-semibold text-foreground">{factor.name}</h5>

@@ -25,7 +25,7 @@ export function ChallengeCard({
   const isApproved = participation?.approvalStatus === 'APPROVED';
 
   return (
-    <Card hoverable className="overflow-hidden flex flex-col justify-between h-full">
+    <Card hoverable className="flex flex-col justify-between h-full">
       <CardContent className="p-6 flex-1 flex flex-col justify-between">
         <div>
           <div className="flex justify-between items-start mb-4">
@@ -37,7 +37,7 @@ export function ChallengeCard({
             </Badge>
           </div>
 
-          <h4 className="text-base font-bold text-foreground truncate">{challenge.title}</h4>
+          <h4 className="text-base font-bold text-foreground line-clamp-2">{challenge.title}</h4>
           <p className="text-xs text-muted-foreground line-clamp-3 mt-1.5">{challenge.description}</p>
 
           {/* Rewards details */}

@@ -26,7 +26,7 @@ export function SocialWidget({ activities = [] }: SocialWidgetProps) {
             activeActivities.map((act) => (
               <div key={act.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/40 transition-colors">
                 <div>
-                  <h6 className="text-sm font-semibold text-foreground truncate max-w-[180px]">{act.title}</h6>
+                  <h6 className="text-sm font-semibold text-foreground line-clamp-2">{act.title}</h6>
                   <span className="text-[10px] text-muted-foreground flex items-center space-x-1.5 mt-0.5">
                     <Calendar className="h-3 w-3" />
                     <span>Ends: {new Date(act.deadline).toLocaleDateString()}</span>

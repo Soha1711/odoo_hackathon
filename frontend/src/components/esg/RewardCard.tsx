@@ -20,11 +20,11 @@ export function RewardCard({
   const isOutOfStock = reward.stock <= 0;
 
   return (
-    <Card hoverable className="overflow-hidden flex flex-col justify-between h-full">
+    <Card hoverable className="flex flex-col justify-between h-full">
       <CardContent className="p-6 flex-1 flex flex-col justify-between">
         <div>
           <div className="flex justify-between items-start mb-4">
-            <div className="p-2.5 bg-purple-100 dark:bg-purple-950/20 text-purple-600 rounded-xl">
+            <div className="p-2.5 bg-teal-100 dark:bg-teal-950/20 text-teal-600 rounded-xl">
               <Gift className="h-5 w-5" />
             </div>
             <Badge variant={isOutOfStock ? 'danger' : 'default'}>
@@ -32,7 +32,7 @@ export function RewardCard({
             </Badge>
           </div>
 
-          <h4 className="text-base font-bold text-foreground truncate">{reward.name}</h4>
+          <h4 className="text-base font-bold text-foreground line-clamp-2">{reward.name}</h4>
           <p className="text-xs text-muted-foreground line-clamp-3 mt-1.5">{reward.description || 'Redeem this item with your points.'}</p>
         </div>
 

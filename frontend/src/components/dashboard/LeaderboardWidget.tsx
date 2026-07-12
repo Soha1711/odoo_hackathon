@@ -45,7 +45,7 @@ export function LeaderboardWidget({ departments = [] }: LeaderboardWidgetProps) 
                         <span className="text-sm font-bold text-muted-foreground">{index + 1}</span>
                       )}
                     </span>
-                    <span className="text-sm font-semibold text-foreground truncate max-w-[150px]">
+                    <span className="text-sm font-semibold text-foreground line-clamp-2">
                       {dept.name}
                     </span>
                   </div>
