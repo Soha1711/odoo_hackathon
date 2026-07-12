@@ -13,8 +13,9 @@ import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { DatePicker } from '../../components/ui/DatePicker';
+import { Skeleton } from '../../components/ui/Skeleton';
 import { toast } from '../../components/ui/Toast';
-import { Leaf, Plus } from 'lucide-react';
+import { Leaf, Plus, Target, FileText } from 'lucide-react';
 
 const carbonSchema = zod.object({
   sourceType: zod.enum(['PURCHASE', 'MANUFACTURING', 'EXPENSE', 'FLEET'], {
@@ -101,12 +102,23 @@ export function Environmental() {
 
       {/* Active Goals Grid */}
       <div>
-        <h3 className="text-lg font-bold text-foreground mb-4">Target Benchmarks</h3>
+        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center">
+          <Target className="h-5 w-5 mr-2 text-emerald-500" />
+          Target Benchmarks
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {isLoadingGoals ? (
-            <p className="text-sm text-muted-foreground">Loading goals...</p>
+            <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Skeleton className="h-40" />
+              <Skeleton className="h-40" />
+              <Skeleton className="h-40" />
+            </div>
           ) : goals.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No target goals established.</p>
+            <div className="col-span-full flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <Target className="h-10 w-10 mb-3 text-muted-foreground/30" />
+              <p className="text-sm font-medium">No environmental goals established yet.</p>
+              <p className="text-xs text-muted-foreground/70 mt-1">Set targets to track sustainability progress across departments.</p>
+            </div>
           ) : (
             goals.map((goal) => <GoalCard key={goal.id} goal={goal} />)
           )}
@@ -115,12 +127,23 @@ export function Environmental() {
 
       {/* Transaction Logs */}
       <div>
-        <h3 className="text-lg font-bold text-foreground mb-4">Carbon Emission Register</h3>
+        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center">
+          <FileText className="h-5 w-5 mr-2 text-emerald-500" />
+          Carbon Emission Register
+        </h3>
         <div className="space-y-4">
           {isLoadingTransactions ? (
-            <p className="text-sm text-muted-foreground">Loading transaction logs...</p>
+            <div className="space-y-4">
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+            </div>
           ) : transactions.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No carbon logs registered yet.</p>
+            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <FileText className="h-10 w-10 mb-3 text-muted-foreground/30" />
+              <p className="text-sm font-medium">No carbon transactions logged yet.</p>
+              <p className="text-xs text-muted-foreground/70 mt-1">Click "Log Carbon" to start tracking emissions.</p>
+            </div>
           ) : (
             transactions.map((tx) => <CarbonCard key={tx.id} transaction={tx} />)
           )}

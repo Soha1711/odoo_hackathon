@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { Sun, Moon, Sparkles, Trophy, X } from 'lucide-react';
+import { Sun, Moon, Sparkles, Trophy, X, Menu } from 'lucide-react';
 import { useTheme } from '../context/ThemeProvider';
 import { useAuthContext } from '../context/AuthContext';
 import { NotificationBell } from '../components/ui/NotificationBell';
 import { useNotifications } from '../hooks/useNotifications';
 import { AnimatePresence, motion } from 'framer-motion';
 
-export function Header() {
+interface HeaderProps {
+  onMenuToggle?: () => void;
+}
+
+export function Header({ onMenuToggle }: HeaderProps) {
   const { theme, setTheme } = useTheme();
   const { user } = useAuthContext();
   const { notifications, markAsRead, markAllAsRead } = useNotifications();
@@ -17,9 +21,16 @@ export function Header() {
   };
 
   return (
-    <header className="h-16 border-b border-border bg-card/65 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-30">
-      {/* Left side: user stats summary */}
-      <div className="flex items-center space-x-4">
+    <header className="h-16 border-b border-border bg-card/65 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
+      {/* Left side: hamburger + user stats */}
+      <div className="flex items-center space-x-3">
+        <button
+          onClick={onMenuToggle}
+          className="lg:hidden p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          aria-label="Toggle sidebar"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
         {user && (
           <div className="hidden sm:flex items-center space-x-3 text-sm">
             <div className="flex items-center text-yellow-600 bg-yellow-500/10 px-2.5 py-1 rounded-full font-semibold border border-yellow-500/20">

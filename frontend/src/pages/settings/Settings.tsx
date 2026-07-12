@@ -8,9 +8,10 @@ import { environmentApi } from '../../api/environment';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Modal } from '../../components/ui/Modal';
+import { Skeleton } from '../../components/ui/Skeleton';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { toast } from '../../components/ui/Toast';
-import { Settings as SettingsIcon, Plus, Building2 } from 'lucide-react';
+import { Settings as SettingsIcon, Plus, Building2, Calculator } from 'lucide-react';
 import { useAuthContext } from '../../context/AuthContext';
 
 const deptSchema = zod.object({
@@ -100,9 +101,17 @@ export function Settings() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {isLoadingDepts ? (
-              <p className="text-sm text-muted-foreground">Loading departments...</p>
+              <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Skeleton className="h-32" />
+                <Skeleton className="h-32" />
+                <Skeleton className="h-32" />
+              </div>
             ) : (deptsData?.data || []).length === 0 ? (
-              <p className="text-sm text-muted-foreground">No departments registered.</p>
+              <div className="col-span-full flex flex-col items-center justify-center py-12 text-muted-foreground">
+                <Building2 className="h-10 w-10 mb-3 text-muted-foreground/30" />
+                <p className="text-sm font-medium">No departments registered.</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">Add your first department to get started with ESG tracking.</p>
+              </div>
             ) : (
               (deptsData?.data || []).map((dept) => (
                 <div key={dept.id} className="p-5 bg-card border border-border rounded-xl flex items-center justify-between hover:shadow-md transition-shadow">
@@ -128,9 +137,17 @@ export function Settings() {
           <h3 className="text-lg font-bold text-foreground mb-4">Emissions Conversion Table</h3>
           <div className="space-y-4">
             {isLoadingFactors ? (
-              <p className="text-sm text-muted-foreground">Loading conversion factors...</p>
+              <div className="space-y-4">
+                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-20 w-full" />
+              </div>
             ) : (factorsData?.data || []).length === 0 ? (
-              <p className="text-sm text-muted-foreground">No custom factors registered. Using platform defaults.</p>
+              <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
+                <Calculator className="h-8 w-8 mb-2 text-muted-foreground/30" />
+                <p className="text-sm font-medium">No emission factors registered.</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">Using platform default conversion factors.</p>
+              </div>
             ) : (
               (factorsData?.data || []).map((factor: any) => (
                 <div key={factor.id} className="p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">

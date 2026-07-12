@@ -5,8 +5,9 @@ import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 import { FileUpload } from '../../components/ui/FileUpload';
+import { Skeleton } from '../../components/ui/Skeleton';
 import { toast } from '../../components/ui/Toast';
-import { Heart, Calendar, Check, X } from 'lucide-react';
+import { Heart, Calendar, Check, X, ClipboardCheck } from 'lucide-react';
 import { useAuthContext } from '../../context/AuthContext';
 
 export function Social() {
@@ -62,12 +63,23 @@ export function Social() {
 
       {/* Grid of CSR activities */}
       <div>
-        <h3 className="text-lg font-bold text-foreground mb-4">Scheduled CSR Activities</h3>
+        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center">
+          <Heart className="h-5 w-5 mr-2 text-red-500" />
+          Scheduled CSR Activities
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {isLoadingActivities ? (
-            <p className="text-sm text-muted-foreground">Loading activities...</p>
+            <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Skeleton className="h-52" />
+              <Skeleton className="h-52" />
+              <Skeleton className="h-52" />
+            </div>
           ) : activities.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No active CSR activities planned.</p>
+            <div className="col-span-full flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <Heart className="h-10 w-10 mb-3 text-muted-foreground/30" />
+              <p className="text-sm font-medium">No CSR activities scheduled yet.</p>
+              <p className="text-xs text-muted-foreground/70 mt-1">Check back later for upcoming volunteer opportunities.</p>
+            </div>
           ) : (
             activities.map((act) => {
               const hasJoined = participations.some((p) => p.csrActivityId === act.id);
@@ -119,12 +131,21 @@ export function Social() {
       {/* Management Review Section */}
       {isManagement && (
         <div>
-          <h3 className="text-lg font-bold text-foreground mb-4">Pending Approvals</h3>
+          <h3 className="text-lg font-bold text-foreground mb-4 flex items-center">
+            <ClipboardCheck className="h-5 w-5 mr-2 text-amber-500" />
+            Pending Approvals
+          </h3>
           <div className="space-y-4">
             {isLoadingParticipations ? (
-              <p className="text-sm text-muted-foreground">Loading reviews...</p>
+              <div className="space-y-4">
+                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-20 w-full" />
+              </div>
             ) : participations.filter((p) => p.approvalStatus === 'PENDING').length === 0 ? (
-              <p className="text-sm text-muted-foreground">No pending CSR approvals found.</p>
+              <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
+                <ClipboardCheck className="h-8 w-8 mb-2 text-emerald-500" />
+                <p className="text-sm font-medium">All caught up — no pending CSR approvals.</p>
+              </div>
             ) : (
               participations
                 .filter((p) => p.approvalStatus === 'PENDING')

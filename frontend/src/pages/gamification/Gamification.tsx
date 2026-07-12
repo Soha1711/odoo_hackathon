@@ -6,8 +6,9 @@ import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { FileUpload } from '../../components/ui/FileUpload';
+import { Skeleton } from '../../components/ui/Skeleton';
 import { toast } from '../../components/ui/Toast';
-import { Trophy } from 'lucide-react';
+import { Trophy, Zap, Gift } from 'lucide-react';
 import { useAuthContext } from '../../context/AuthContext';
 
 export function Gamification() {
@@ -96,12 +97,23 @@ export function Gamification() {
 
       {/* Grid of Challenges */}
       <div>
-        <h3 className="text-lg font-bold text-foreground mb-4">Active Challenges</h3>
+        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center">
+          <Zap className="h-5 w-5 mr-2 text-yellow-500" />
+          Active Challenges
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {isLoadingChallenges ? (
-            <p className="text-sm text-muted-foreground">Loading challenges...</p>
+            <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Skeleton className="h-52" />
+              <Skeleton className="h-52" />
+              <Skeleton className="h-52" />
+            </div>
           ) : challenges.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No active sustainability challenges planned.</p>
+            <div className="col-span-full flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <Zap className="h-10 w-10 mb-3 text-muted-foreground/30" />
+              <p className="text-sm font-medium">No active challenges available right now.</p>
+              <p className="text-xs text-muted-foreground/70 mt-1">New sustainability challenges are posted regularly — check back soon!</p>
+            </div>
           ) : (
             challenges.map((ch) => {
               const part = (participations || []).find((p: any) => p.challengeId === ch.id);
@@ -124,12 +136,23 @@ export function Gamification() {
 
       {/* Rewards shop */}
       <div>
-        <h3 className="text-lg font-bold text-foreground mb-4">Rewards Center</h3>
+        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center">
+          <Gift className="h-5 w-5 mr-2 text-purple-500" />
+          Rewards Center
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {isLoadingRewards ? (
-            <p className="text-sm text-muted-foreground">Loading rewards...</p>
+            <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Skeleton className="h-44" />
+              <Skeleton className="h-44" />
+              <Skeleton className="h-44" />
+            </div>
           ) : rewards.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No rewards available for redemption.</p>
+            <div className="col-span-full flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <Gift className="h-10 w-10 mb-3 text-muted-foreground/30" />
+              <p className="text-sm font-medium">No rewards available for redemption.</p>
+              <p className="text-xs text-muted-foreground/70 mt-1">Earn points by completing challenges to unlock rewards.</p>
+            </div>
           ) : (
             rewards.map((rw) => (
               <RewardCard

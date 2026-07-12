@@ -12,9 +12,10 @@ import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Textarea } from '../../components/ui/Textarea';
 import { DatePicker } from '../../components/ui/DatePicker';
+import { Skeleton } from '../../components/ui/Skeleton';
 import { toast } from '../../components/ui/Toast';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
-import { Shield, Plus, Calendar } from 'lucide-react';
+import { Shield, Plus, Calendar, FileCheck, AlertTriangle, ClipboardList } from 'lucide-react';
 import { useAuthContext } from '../../context/AuthContext';
 
 const auditSchema = zod.object({
@@ -95,9 +96,17 @@ export function Governance() {
         <TabsContent value="policies" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {isLoadingPolicies ? (
-              <p className="text-sm text-muted-foreground">Loading policies...</p>
+              <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Skeleton className="h-48" />
+                <Skeleton className="h-48" />
+                <Skeleton className="h-48" />
+              </div>
             ) : policies.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No governance directives issued.</p>
+              <div className="col-span-full flex flex-col items-center justify-center py-12 text-muted-foreground">
+                <FileCheck className="h-10 w-10 mb-3 text-muted-foreground/30" />
+                <p className="text-sm font-medium">No governance policies issued yet.</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">Policies will appear here once published by management.</p>
+              </div>
             ) : (
               policies.map((p) => {
                 const isAcked = acks.some((ack) => ack.policyId === p.id);
@@ -128,7 +137,11 @@ export function Governance() {
 
           <div className="space-y-4">
             {audits.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No compliance audits recorded.</p>
+              <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
+                <ClipboardList className="h-8 w-8 mb-2 text-muted-foreground/30" />
+                <p className="text-sm font-medium">No compliance audits recorded yet.</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">Management can log audits to track department compliance.</p>
+              </div>
             ) : (
               audits.map((a) => (
                 <div key={a.id} className="p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
@@ -154,7 +167,11 @@ export function Governance() {
           <h3 className="text-lg font-bold text-foreground mb-4">Risk & Non-Compliance issues</h3>
           <div className="space-y-4">
             {issues.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No open compliance issues registered.</p>
+              <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
+                <AlertTriangle className="h-8 w-8 mb-2 text-emerald-500" />
+                <p className="text-sm font-medium">No compliance issues registered.</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">All governance checks are passing — great work!</p>
+              </div>
             ) : (
               issues.map((issue) => (
                 <div key={issue.id} className="p-4 bg-card border border-border rounded-xl flex justify-between items-center shadow-sm">

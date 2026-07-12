@@ -7,11 +7,19 @@ export class DashboardService {
     const month = now.getMonth() + 1;
 
     // 1. Scorecard (ESG Scores)
-    // Fetch all department scores for the current month
+    // Find the most recent month that has department scores (falls back gracefully)
+    const latestScore = await prisma.departmentScore.findFirst({
+      orderBy: [{ year: 'desc' }, { month: 'desc' }],
+      where: departmentId ? { departmentId } : {},
+    });
+
+    const scoreYear = latestScore?.year ?? year;
+    const scoreMonth = latestScore?.month ?? month;
+
     const scores = await prisma.departmentScore.findMany({
       where: {
-        year,
-        month,
+        year: scoreYear,
+        month: scoreMonth,
         ...(departmentId && { departmentId }),
       },
     });
@@ -67,7 +75,7 @@ export class DashboardService {
       where: { status: 'ACTIVE' },
       include: {
         scores: {
-          where: { year, month },
+          where: { year: scoreYear, month: scoreMonth },
         },
       },
     });
