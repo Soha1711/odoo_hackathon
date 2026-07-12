@@ -3,14 +3,14 @@ import { API_ENDPOINTS } from '../constants/api';
 import { AuthResponse } from '../types/auth';
 
 export const authApi = {
-  login: async (credentials: { email: string; passwordHash: string }): Promise<AuthResponse> => {
+  login: async (credentials: { email: string; password: string }): Promise<AuthResponse> => {
     const res = await apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, credentials);
     return res.data;
   },
 
   register: async (data: {
     email: string;
-    passwordHash: string;
+    password: string;
     firstName: string;
     lastName: string;
     role: string;

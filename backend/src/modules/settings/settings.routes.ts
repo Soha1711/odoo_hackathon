@@ -12,7 +12,7 @@ settingsRouter.patch('/config', authMiddleware, requireRole([Role.ADMIN]), contr
 
 // Departments Router
 export const departmentsRouter = Router();
-departmentsRouter.get('/', authMiddleware, controller.getDepartments);
+departmentsRouter.get('/', controller.getDepartments);
 departmentsRouter.post('/', authMiddleware, requireRole([Role.ADMIN]), controller.createDepartment);
 departmentsRouter.patch('/:id', authMiddleware, requireRole([Role.ADMIN, Role.MANAGER]), controller.updateDepartment);
 departmentsRouter.delete('/:id', authMiddleware, requireRole([Role.ADMIN]), controller.deleteDepartment);

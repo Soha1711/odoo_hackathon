@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
@@ -22,8 +23,15 @@ const registerSchema = zod.object({
 type RegisterFormValues = zod.infer<typeof registerSchema>;
 
 export function Register() {
-  const { register: registerUser } = useAuthContext();
+  const { register: registerUser, isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
+
+  // Redirect once auth state is confirmed true after registration
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   // Fetch departments for selection
   const { data: deptsData } = useQuery({
@@ -51,14 +59,13 @@ export function Register() {
     try {
       await registerUser({
         email: values.email,
-        passwordHash: values.password,
+        password: values.password,
         firstName: values.firstName,
         lastName: values.lastName,
         role: 'CONTRIBUTOR',
         departmentId: values.departmentId,
       });
       toast.success('Registration successful! Welcome to EcoSphere.');
-      navigate('/');
     } catch (err: any) {
       toast.error(err.message || 'Registration failed. Please try again.');
     }

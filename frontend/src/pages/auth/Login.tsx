@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
@@ -16,8 +17,15 @@ const loginSchema = zod.object({
 type LoginFormValues = zod.infer<typeof loginSchema>;
 
 export function Login() {
-  const { login } = useAuthContext();
+  const { login, isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
+
+  // Redirect once auth state is confirmed true (after mutation + cache update)
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const {
     register,
@@ -31,10 +39,9 @@ export function Login() {
     try {
       await login({
         email: values.email,
-        passwordHash: values.password,
+        password: values.password,
       });
       toast.success('Welcome back to EcoSphere!');
-      navigate('/');
     } catch (err: any) {
       toast.error(err.message || 'Login failed. Please check your credentials.');
     }
