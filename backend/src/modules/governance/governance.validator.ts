@@ -1,5 +1,8 @@
 import { z } from 'zod';
-import { AuditOutcome, ComplianceSeverity, ComplianceStatus } from '@prisma/client';
+import { ComplianceSeverity, ComplianceStatus } from '@prisma/client';
+
+// Accept both Prisma AuditOutcome values and frontend-friendly aliases
+const auditOutcomeValues = ['COMPLIANT', 'ACTION_REQUIRED', 'PASSED', 'FAILED', 'UNDER_REVIEW'] as const;
 
 export const CreatePolicySchema = z.object({
   body: z.object({
@@ -7,7 +10,7 @@ export const CreatePolicySchema = z.object({
     description: z.string().min(1),
     contentUrl: z.string().url(),
     version: z.string().optional(),
-    effectiveDate: z.string().datetime(),
+    effectiveDate: z.string().min(1), // Accept YYYY-MM-DD or ISO 8601
   }),
 });
 
@@ -15,9 +18,9 @@ export const CreateAuditSchema = z.object({
   body: z.object({
     departmentId: z.string().uuid(),
     auditorName: z.string().min(1),
-    auditDate: z.string().datetime(),
+    auditDate: z.string().min(1), // Accept YYYY-MM-DD or ISO 8601
     score: z.number().min(0).max(100),
-    outcome: z.nativeEnum(AuditOutcome),
+    outcome: z.enum(auditOutcomeValues),
     findings: z.string().min(1),
   }),
 });
@@ -30,7 +33,7 @@ export const CreateIssueSchema = z.object({
     severity: z.nativeEnum(ComplianceSeverity),
     departmentId: z.string().uuid(),
     ownerId: z.string().uuid(),
-    dueDate: z.string().datetime(),
+    dueDate: z.string().min(1), // Accept YYYY-MM-DD or ISO 8601
   }),
 });
 

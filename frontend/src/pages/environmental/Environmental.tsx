@@ -5,6 +5,7 @@ import * as zod from 'zod';
 import { useEnvironmental } from '../../hooks/useEnvironmental';
 import { useQuery } from '@tanstack/react-query';
 import { settingsApi } from '../../api/settings';
+import { environmentApi } from '../../api/environment';
 import { GoalCard } from '../../components/esg/GoalCard';
 import { CarbonCard } from '../../components/esg/CarbonCard';
 import { Button } from '../../components/ui/Button';
@@ -16,10 +17,13 @@ import { toast } from '../../components/ui/Toast';
 import { Leaf, Plus } from 'lucide-react';
 
 const carbonSchema = zod.object({
-  sourceType: zod.enum(['SCOPE_1_STATIONARY', 'SCOPE_1_MOBILE', 'SCOPE_2_ELECTRICITY', 'SCOPE_3_TRAVEL', 'SCOPE_3_WASTE']),
+  sourceType: zod.enum(['PURCHASE', 'MANUFACTURING', 'EXPENSE', 'FLEET'], {
+    required_error: 'Source type is required',
+  }),
   sourceId: zod.string().min(2, 'Identifier/Ref is required'),
   quantity: zod.coerce.number().positive('Quantity must be greater than zero'),
   unit: zod.string().min(1, 'Unit is required'),
+  emissionFactorId: zod.string().min(1, 'Emission factor is required'),
   departmentId: zod.string().min(1, 'Department is required'),
   transactionDate: zod.string().min(1, 'Date is required'),
 });
@@ -36,9 +40,20 @@ export function Environmental() {
     queryFn: () => settingsApi.getDepartments(),
   });
 
+  // Fetch emission factors for the dropdown
+  const { data: factorsData } = useQuery({
+    queryKey: ['env_factors_form'],
+    queryFn: () => environmentApi.getFactors(),
+  });
+
   const deptOptions = (deptsData?.data || []).map((d) => ({
     label: `${d.name} (${d.code})`,
     value: d.id,
+  }));
+
+  const factorOptions = (factorsData?.data || []).map((f: any) => ({
+    label: `${f.name} (${f.factor} kg CO₂e/${f.unit})`,
+    value: f.id,
   }));
 
   const {
@@ -56,7 +71,7 @@ export function Environmental() {
 
   const onSubmit = async (values: CarbonFormValues) => {
     try {
-      await logTransaction(values);
+      await logTransaction(values as any);
       toast.success('Carbon transaction logged successfully.');
       setIsLogModalOpen(false);
       reset();
@@ -79,7 +94,7 @@ export function Environmental() {
         </div>
 
         <Button onClick={() => setIsLogModalOpen(true)} className="flex items-center space-x-1.5">
-          <Plus className="h-4.5 w-4.5" />
+          <Plus className="h-4 w-4" />
           <span>Log Carbon</span>
         </Button>
       </div>
@@ -116,13 +131,13 @@ export function Environmental() {
       <Modal isOpen={isLogModalOpen} onClose={() => setIsLogModalOpen(false)} title="Log Carbon Emissions">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
           <Select
-            label="Emission Type"
+            label="Emission Source Type"
             options={[
-              { label: 'Electricity Consumption (Scope 2)', value: 'SCOPE_2_ELECTRICITY' },
-              { label: 'Stationary Combustion (Scope 1)', value: 'SCOPE_1_STATIONARY' },
-              { label: 'Mobile Vehicle Fleet (Scope 1)', value: 'SCOPE_1_MOBILE' },
-              { label: 'Business Flights/Travel (Scope 3)', value: 'SCOPE_3_TRAVEL' },
-              { label: 'General Waste Discards (Scope 3)', value: 'SCOPE_3_WASTE' },
+              { label: 'Select source type...', value: '' },
+              { label: 'Electricity / Energy Purchase (Scope 2)', value: 'EXPENSE' },
+              { label: 'Stationary Combustion / Fuel Purchase (Scope 1)', value: 'PURCHASE' },
+              { label: 'Vehicle Fleet / Mobile Combustion (Scope 1)', value: 'FLEET' },
+              { label: 'Manufacturing / Industrial Process (Scope 1)', value: 'MANUFACTURING' },
             ]}
             error={errors.sourceType?.message}
             {...register('sourceType')}
@@ -151,6 +166,13 @@ export function Environmental() {
               {...register('unit')}
             />
           </div>
+
+          <Select
+            label="Emission Factor"
+            options={[{ label: 'Select emission factor...', value: '' }, ...factorOptions]}
+            error={errors.emissionFactorId?.message}
+            {...register('emissionFactorId')}
+          />
 
           <Select
             label="Reporting Department"

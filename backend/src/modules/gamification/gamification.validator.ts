@@ -9,7 +9,7 @@ export const CreateChallengeSchema = z.object({
     xp: z.number().nonnegative(),
     difficulty: z.nativeEnum(Difficulty),
     evidenceRequired: z.boolean().optional(),
-    deadline: z.string().datetime(),
+    deadline: z.string().min(1), // Accept YYYY-MM-DD or ISO 8601
     status: z.nativeEnum(ChallengeStatus).optional(),
   }),
 });

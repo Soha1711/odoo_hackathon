@@ -29,7 +29,22 @@ export class EnvironmentalService {
     return this.repository.getCarbonTransactions(filters);
   }
 
-  async logTransaction(data: { sourceType: TransactionSourceType; sourceId: string; quantity: number; unit: string; emissionFactorId: string; departmentId: string; transactionDate: string }) {
+  async logTransaction(data: { sourceType: string; sourceId: string; quantity: number; unit: string; emissionFactorId: string; departmentId: string; transactionDate: string }) {
+    // Map frontend scope strings to Prisma TransactionSourceType enum
+    const sourceTypeMap: Record<string, TransactionSourceType> = {
+      SCOPE_1_STATIONARY: TransactionSourceType.PURCHASE,
+      SCOPE_1_MOBILE: TransactionSourceType.FLEET,
+      SCOPE_2_ELECTRICITY: TransactionSourceType.EXPENSE,
+      SCOPE_3_TRAVEL: TransactionSourceType.FLEET,
+      SCOPE_3_WASTE: TransactionSourceType.MANUFACTURING,
+      // Already valid Prisma values pass through
+      PURCHASE: TransactionSourceType.PURCHASE,
+      MANUFACTURING: TransactionSourceType.MANUFACTURING,
+      EXPENSE: TransactionSourceType.EXPENSE,
+      FLEET: TransactionSourceType.FLEET,
+    };
+    const mappedSourceType = sourceTypeMap[data.sourceType] || TransactionSourceType.EXPENSE;
+
     const factor = await this.repository.getEmissionFactorById(data.emissionFactorId);
     if (!factor) {
       throw new HttpError(404, 'Emission factor reference not found');
@@ -39,7 +54,7 @@ export class EnvironmentalService {
     const txDate = new Date(data.transactionDate);
 
     const transaction = await this.repository.createCarbonTransaction({
-      sourceType: data.sourceType,
+      sourceType: mappedSourceType,
       sourceId: data.sourceId,
       quantity: data.quantity,
       unit: data.unit,

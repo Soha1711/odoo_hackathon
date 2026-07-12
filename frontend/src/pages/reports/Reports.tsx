@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useEnvironmental } from '../../hooks/useEnvironmental';
 import { DonutChart } from '../../components/charts/DonutChart';
 import { StackedBarChart } from '../../components/charts/StackedBarChart';
@@ -10,14 +9,40 @@ import { FileBarChart, Download, FileSpreadsheet } from 'lucide-react';
 
 export function Reports() {
   const { transactions, isLoadingTransactions } = useEnvironmental();
-  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownload = (format: 'pdf' | 'csv') => {
-    setIsDownloading(true);
-    setTimeout(() => {
-      setIsDownloading(false);
-      toast.success(`EcoSphere ESG report downloaded in ${format.toUpperCase()} format successfully!`);
-    }, 1500);
+    if (transactions.length === 0) {
+      toast.error('No data available to export. Log some carbon transactions first.');
+      return;
+    }
+
+    // Build CSV content
+    const headers = ['Reference', 'Source Type', 'Quantity', 'Unit', 'CO2e Emissions (kg)', 'Department', 'Date'];
+    const rows = transactions.map((tx: any) => [
+      tx.sourceId,
+      tx.sourceType,
+      tx.quantity,
+      tx.unit,
+      tx.calculatedEmissions?.toFixed(2) ?? '0.00',
+      tx.department?.name ?? 'N/A',
+      tx.transactionDate ? new Date(tx.transactionDate).toLocaleDateString() : 'N/A',
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map((row) => row.map((cell: any) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `ecosphere-esg-report-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'csv' : 'csv'}`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast.success(`ESG report exported as CSV successfully! (${transactions.length} records)`);
   };
 
   // Compile data for Donut Chart (Emissions by Source Type)
@@ -79,7 +104,7 @@ export function Reports() {
             variant="outline"
             className="flex items-center space-x-1.5"
             onClick={() => handleDownload('csv')}
-            disabled={isDownloading}
+            disabled={false}
           >
             <FileSpreadsheet className="h-4.5 w-4.5" />
             <span>Export CSV</span>
@@ -88,7 +113,7 @@ export function Reports() {
           <Button
             className="flex items-center space-x-1.5"
             onClick={() => handleDownload('pdf')}
-            disabled={isDownloading}
+            disabled={false}
           >
             <Download className="h-4.5 w-4.5" />
             <span>Export PDF</span>

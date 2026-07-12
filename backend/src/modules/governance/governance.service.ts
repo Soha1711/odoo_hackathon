@@ -52,10 +52,21 @@ export class GovernanceService {
     return this.repository.getAudits(departmentId);
   }
 
-  async recordAudit(data: { departmentId: string; auditorName: string; auditDate: string; score: number; outcome: 'COMPLIANT' | 'ACTION_REQUIRED'; findings: string }) {
+  async recordAudit(data: { departmentId: string; auditorName: string; auditDate: string; score: number; outcome: string; findings: string }) {
+    // Map frontend outcome aliases to Prisma AuditOutcome enum
+    const outcomeMap: Record<string, 'COMPLIANT' | 'ACTION_REQUIRED'> = {
+      PASSED: 'COMPLIANT',
+      COMPLIANT: 'COMPLIANT',
+      FAILED: 'ACTION_REQUIRED',
+      UNDER_REVIEW: 'ACTION_REQUIRED',
+      ACTION_REQUIRED: 'ACTION_REQUIRED',
+    };
+    const mappedOutcome = (outcomeMap[data.outcome] || 'COMPLIANT') as 'COMPLIANT' | 'ACTION_REQUIRED';
+
     const auditDate = new Date(data.auditDate);
     const audit = await this.repository.createAudit({
       ...data,
+      outcome: mappedOutcome,
       auditDate,
     });
 

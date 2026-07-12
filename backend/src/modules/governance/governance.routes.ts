@@ -11,12 +11,15 @@ const controller = new GovernanceController();
 // Policies
 router.get('/policies', authMiddleware, controller.getPolicies);
 router.post('/policies', authMiddleware, requireRole([Role.ADMIN, Role.MANAGER]), validateRequest(CreatePolicySchema), controller.createPolicy);
-router.post('/policies/:id/acknowledge', authMiddleware, requireRole([Role.CONTRIBUTOR]), controller.acknowledgePolicy);
-router.get('/acknowledgements', authMiddleware, controller.getAcks);
+// All authenticated users can acknowledge policies (not just CONTRIBUTORs)
+router.post('/policies/:id/acknowledge', authMiddleware, controller.acknowledgePolicy);
+// Match frontend API constant: ACKS = '/governance/acks'
+router.get('/acks', authMiddleware, controller.getAcks);
 
 // Audits
 router.get('/audits', authMiddleware, controller.getAudits);
-router.post('/audits', authMiddleware, requireRole([Role.ADMIN]), validateRequest(CreateAuditSchema), controller.createAudit);
+// Both ADMIN and MANAGER can log audits
+router.post('/audits', authMiddleware, requireRole([Role.ADMIN, Role.MANAGER]), validateRequest(CreateAuditSchema), controller.createAudit);
 
 // Compliance Issues
 router.get('/issues', authMiddleware, controller.getIssues);

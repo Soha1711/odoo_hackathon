@@ -136,7 +136,7 @@ export function Settings() {
                 <div key={factor.id} className="p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
                   <div>
                     <h5 className="text-sm font-semibold text-foreground">{factor.name}</h5>
-                    <p className="text-xs text-muted-foreground mt-0.5">Source Type: {factor.sourceType}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Source: {factor.source}</p>
                   </div>
                   <div className="text-right">
                     <span className="text-base font-bold text-foreground">{factor.factor.toFixed(4)}</span>

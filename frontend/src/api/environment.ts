@@ -3,10 +3,11 @@ import { API_ENDPOINTS } from '../constants/api';
 import { EnvironmentalGoal } from '../types/goal';
 
 export interface CarbonTransactionInput {
-  sourceType: 'SCOPE_1_STATIONARY' | 'SCOPE_1_MOBILE' | 'SCOPE_2_ELECTRICITY' | 'SCOPE_3_TRAVEL' | 'SCOPE_3_WASTE';
+  sourceType: 'PURCHASE' | 'MANUFACTURING' | 'EXPENSE' | 'FLEET';
   sourceId: string;
   quantity: number;
   unit: string;
+  emissionFactorId: string;
   departmentId: string;
   transactionDate: string;
 }

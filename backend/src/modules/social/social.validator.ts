@@ -7,7 +7,7 @@ export const CreateCsrActivitySchema = z.object({
     description: z.string().min(1),
     categoryId: z.string().uuid(),
     pointsXp: z.number().nonnegative(),
-    deadline: z.string().datetime(),
+    deadline: z.string().min(1), // Accept YYYY-MM-DD or ISO 8601
   }),
 });
 
