@@ -86,7 +86,7 @@ export function Environmental() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground flex items-center">
-            <Leaf className="h-8 w-8 mr-2.5 text-emerald-500 animate-bounce" />
+            <Leaf className="h-8 w-8 mr-2.5 text-emerald-500" />
             Environmental Module
           </h1>
           <p className="text-sm text-muted-foreground mt-1">

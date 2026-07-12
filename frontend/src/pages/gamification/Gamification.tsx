@@ -75,7 +75,7 @@ export function Gamification() {
       <div className="bg-gradient-to-r from-emerald-500 to-emerald-700 rounded-2xl p-6 md:p-8 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="space-y-2 text-center md:text-left">
           <h1 className="text-3xl font-extrabold tracking-tight flex items-center justify-center md:justify-start">
-            <Trophy className="h-8 w-8 mr-2.5 text-yellow-300 animate-pulse" />
+            <Trophy className="h-8 w-8 mr-2.5 text-yellow-300" />
             Sustainability Rewards
           </h1>
           <p className="text-emerald-100 text-sm max-w-md">

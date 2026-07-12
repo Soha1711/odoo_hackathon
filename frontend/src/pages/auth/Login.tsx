@@ -67,7 +67,7 @@ export function Login() {
       <div className="w-full max-w-md bg-card/80 backdrop-blur-md border border-border p-8 rounded-2xl shadow-2xl flex flex-col items-center relative z-10">
         {/* Logo */}
         <div className="flex items-center space-x-2.5 mb-6">
-          <Compass className="h-9 w-9 text-emerald-500 animate-pulse" />
+          <Compass className="h-9 w-9 text-emerald-500" />
           <span className="font-extrabold text-2xl tracking-tight bg-gradient-to-r from-emerald-500 to-emerald-700 bg-clip-text text-transparent">
             EcoSphere
           </span>
