@@ -5,18 +5,17 @@ import { DataTable, Column } from '../../components/ui/DataTable';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { toast } from '../../components/ui/Toast';
-import { FileBarChart, Download, FileSpreadsheet } from 'lucide-react';
+import { FileBarChart, FileSpreadsheet } from 'lucide-react';
 
 export function Reports() {
   const { transactions, isLoadingTransactions } = useEnvironmental();
 
-  const handleDownload = (format: 'pdf' | 'csv') => {
+  const handleDownload = () => {
     if (transactions.length === 0) {
       toast.error('No data available to export. Log some carbon transactions first.');
       return;
     }
 
-    // Build CSV content
     const headers = ['Reference', 'Source Type', 'Quantity', 'Unit', 'CO2e Emissions (kg)', 'Department', 'Date'];
     const rows = transactions.map((tx: any) => [
       tx.sourceId,
@@ -36,7 +35,7 @@ export function Reports() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `ecosphere-esg-report-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'csv' : 'csv'}`);
+    link.setAttribute('download', `ecosphere-esg-report-${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -58,13 +57,26 @@ export function Reports() {
     color: donutColors[idx % donutColors.length],
   }));
 
-  // Stacked Bar Data (Scope 1, 2, 3 comparison mockup)
-  const stackedData = [
-    { name: 'Q1', 'Scope 1': 4000, 'Scope 2': 2400, 'Scope 3': 2400 },
-    { name: 'Q2', 'Scope 1': 3000, 'Scope 2': 1398, 'Scope 3': 2210 },
-    { name: 'Q3', 'Scope 1': 2000, 'Scope 2': 9800, 'Scope 3': 2290 },
-    { name: 'Q4', 'Scope 1': 2780, 'Scope 2': 3908, 'Scope 3': 2000 },
-  ];
+  // Stacked Bar Data from actual transactions grouped by source type
+  const sourceByType: Record<string, { scope1: number; scope2: number; scope3: number }> = {};
+  transactions.forEach((tx) => {
+    const month = new Date(tx.transactionDate).toLocaleString('default', { month: 'short' });
+    if (!sourceByType[month]) sourceByType[month] = { scope1: 0, scope2: 0, scope3: 0 };
+    if (tx.sourceType === 'PURCHASE' || tx.sourceType === 'MANUFACTURING' || tx.sourceType === 'FLEET') {
+      sourceByType[month].scope1 += tx.calculatedEmissions;
+    } else if (tx.sourceType === 'EXPENSE') {
+      sourceByType[month].scope2 += tx.calculatedEmissions;
+    } else {
+      sourceByType[month].scope3 += tx.calculatedEmissions;
+    }
+  });
+
+  const stackedData = Object.entries(sourceByType).map(([name, data]) => ({
+    name,
+    'Scope 1': Math.round(data.scope1),
+    'Scope 2': Math.round(data.scope2),
+    'Scope 3': Math.round(data.scope3),
+  }));
 
   // Table Columns
   const columns: Column<any>[] = [
@@ -80,7 +92,7 @@ export function Reports() {
       cell: (item) => `${item.quantity} ${item.unit}`,
     },
     {
-      header: 'Calculated Impact (kg CO₂e)',
+      header: 'Calculated Impact (kg CO2e)',
       accessorKey: 'calculatedEmissions',
       cell: (item) => <span className="font-bold">{item.calculatedEmissions.toFixed(2)}</span>,
     },
@@ -103,20 +115,11 @@ export function Reports() {
           <Button
             variant="outline"
             className="flex items-center space-x-1.5"
-            onClick={() => handleDownload('csv')}
+            onClick={handleDownload}
             disabled={false}
           >
             <FileSpreadsheet className="h-4.5 w-4.5" />
             <span>Export CSV</span>
-          </Button>
-
-          <Button
-            className="flex items-center space-x-1.5"
-            onClick={() => handleDownload('pdf')}
-            disabled={false}
-          >
-            <Download className="h-4.5 w-4.5" />
-            <span>Export PDF</span>
           </Button>
         </div>
       </div>
@@ -126,7 +129,7 @@ export function Reports() {
         <Card>
           <CardHeader>
             <CardTitle>Emission Footprint Breakdown</CardTitle>
-            <CardDescription>Visual summary of total calculated CO₂e emissions by scopes</CardDescription>
+            <CardDescription>Visual summary of total calculated CO2e emissions by scopes</CardDescription>
           </CardHeader>
           <CardContent className="flex items-center justify-center">
             {donutData.length === 0 ? (
@@ -143,11 +146,15 @@ export function Reports() {
             <CardDescription>Comparison of direct & indirect corporate emission scopes</CardDescription>
           </CardHeader>
           <CardContent>
-            <StackedBarChart
-              data={stackedData}
-              keys={['Scope 1', 'Scope 2', 'Scope 3']}
-              colors={['#10b981', '#3b82f6', '#f59e0b']}
-            />
+            {stackedData.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-10 text-center">No data to chart.</p>
+            ) : (
+              <StackedBarChart
+                data={stackedData}
+                keys={['Scope 1', 'Scope 2', 'Scope 3']}
+                colors={['#10b981', '#3b82f6', '#f59e0b']}
+              />
+            )}
           </CardContent>
         </Card>
       </div>

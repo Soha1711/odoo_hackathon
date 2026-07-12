@@ -7,7 +7,6 @@ export interface CreateUserDto {
   firstName: string;
   lastName: string;
   departmentId?: string;
-  role?: Role;
 }
 
 export class AuthRepository {
@@ -32,7 +31,7 @@ export class AuthRepository {
         passwordHash: dto.passwordHash,
         firstName: dto.firstName,
         lastName: dto.lastName,
-        role: dto.role || Role.CONTRIBUTOR,
+        role: Role.CONTRIBUTOR,
         departmentId: dto.departmentId || null,
       },
       include: { department: true },

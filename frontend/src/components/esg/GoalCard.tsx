@@ -13,7 +13,7 @@ interface GoalCardProps {
 
 export function GoalCard({ goal, onUpdateClick, canUpdate = false }: GoalCardProps) {
   const percentage = (goal.currentValue / goal.targetValue) * 100;
-  const isCompleted = goal.status === 'ACHIEVED' || percentage >= 100;
+  const isCompleted = goal.status === 'COMPLETED' || percentage >= 100;
 
   return (
     <Card hoverable className="overflow-hidden">
@@ -21,9 +21,8 @@ export function GoalCard({ goal, onUpdateClick, canUpdate = false }: GoalCardPro
         <div className="flex justify-between items-start mb-4">
           <div>
             <h4 className="text-base font-semibold text-foreground truncate max-w-[200px]">{goal.title}</h4>
-            <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{goal.description || 'No description provided.'}</p>
           </div>
-          <Badge variant={isCompleted ? 'success' : goal.status === 'MISSED' ? 'danger' : 'default'}>
+          <Badge variant={isCompleted ? 'success' : goal.status === 'ARCHIVED' ? 'danger' : 'default'}>
             {goal.status}
           </Badge>
         </div>

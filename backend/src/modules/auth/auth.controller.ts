@@ -7,14 +7,13 @@ export class AuthController {
 
   register = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-      const { email, password, firstName, lastName, departmentId, role } = req.body;
+      const { email, password, firstName, lastName, departmentId } = req.body;
       const { user, token } = await this.authService.register({
         email,
-        passwordHash: password, // Named passwordHash in DTO
+        passwordHash: password,
         firstName,
         lastName,
         departmentId,
-        role,
       });
 
       return res.status(201).json({

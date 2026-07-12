@@ -16,9 +16,9 @@ export class DashboardService {
       },
     });
 
-    let environmentalScore = 82; // Default mock fallbacks matching wireframe if not seeded
-    let socialScore = 74;
-    let governanceScore = 85;
+    let environmentalScore = 0;
+    let socialScore = 0;
+    let governanceScore = 0;
 
     if (scores.length > 0) {
       const sumEnv = scores.reduce((acc, s) => acc + s.environmentalScore, 0);
@@ -28,6 +28,10 @@ export class DashboardService {
       environmentalScore = Math.round(sumEnv / scores.length);
       socialScore = Math.round(sumSoc / scores.length);
       governanceScore = Math.round(sumGov / scores.length);
+    } else {
+      environmentalScore = 0;
+      socialScore = 0;
+      governanceScore = 0;
     }
 
     const overallScore = Math.round(
@@ -54,7 +58,7 @@ export class DashboardService {
 
       trends.push({
         month: d.toLocaleString('default', { month: 'short' }),
-        emissions: sumRes._sum.calculatedEmissions ?? 120 + (i * 45) + Math.round(Math.random() * 30), // Seed fallback trend if empty
+        emissions: sumRes._sum.calculatedEmissions ?? 0,
       });
     }
 
@@ -74,7 +78,7 @@ export class DashboardService {
         id: d.id,
         name: d.name,
         code: d.code,
-        score: scoreObj ? Math.round(scoreObj.totalScore) : 75 + Math.round(Math.random() * 15), // seed average score if missing
+        score: scoreObj ? Math.round(scoreObj.totalScore) : 0,
       };
     }).sort((a, b) => b.score - a.score);
 

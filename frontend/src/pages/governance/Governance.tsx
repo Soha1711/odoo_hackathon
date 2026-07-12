@@ -21,7 +21,7 @@ const auditSchema = zod.object({
   departmentId: zod.string().min(1, 'Department is required'),
   auditorName: zod.string().min(2, 'Auditor name is required'),
   score: zod.coerce.number().min(0).max(100, 'Score must be between 0 and 100'),
-  outcome: zod.enum(['PASSED', 'FAILED', 'UNDER_REVIEW']),
+  outcome: zod.enum(['COMPLIANT', 'ACTION_REQUIRED']),
   findings: zod.string().min(5, 'Findings notes are required'),
   auditDate: zod.string().min(1, 'Audit date is required'),
 });
@@ -55,7 +55,7 @@ export function Governance() {
     resolver: zodResolver(auditSchema),
     defaultValues: {
       auditDate: new Date().toISOString().split('T')[0],
-      outcome: 'PASSED',
+      outcome: 'COMPLIANT',
     },
   });
 
@@ -206,9 +206,8 @@ export function Governance() {
             <Select
               label="Audit Outcome"
               options={[
-                { label: 'Passed', value: 'PASSED' },
-                { label: 'Failed', value: 'FAILED' },
-                { label: 'Under Review', value: 'UNDER_REVIEW' },
+                { label: 'Compliant', value: 'COMPLIANT' },
+                { label: 'Action Required', value: 'ACTION_REQUIRED' },
               ]}
               error={errors.outcome?.message}
               {...register('outcome')}

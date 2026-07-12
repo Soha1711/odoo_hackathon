@@ -1,24 +1,17 @@
-import { Role } from '../../../shared/interfaces';
+import { Role } from '../types/auth';
 
-export const PERMISSIONS = {
-  // Environmental
-  LOG_CARBON: [Role.ADMIN, Role.MANAGER, Role.CONTRIBUTOR],
-  MANAGE_FACTORS: [Role.ADMIN, Role.MANAGER],
-  MANAGE_GOALS: [Role.ADMIN, Role.MANAGER],
-
-  // Social
-  JOIN_CSR: [Role.CONTRIBUTOR],
-  APPROVE_CSR: [Role.ADMIN, Role.MANAGER],
-
-  // Governance
-  ACKNOWLEDGE_POLICY: [Role.ADMIN, Role.MANAGER, Role.CONTRIBUTOR],
-  PUBLISH_POLICY: [Role.ADMIN, Role.MANAGER],
-  RECORD_AUDIT: [Role.ADMIN, Role.MANAGER],
-  MANAGE_COMPLIANCE: [Role.ADMIN, Role.MANAGER],
-
-  // Settings
-  MANAGE_CONFIG: [Role.ADMIN],
-  MANAGE_DEPARTMENTS: [Role.ADMIN],
+export const PERMISSIONS: Record<string, Role[]> = {
+  LOG_CARBON: ['ADMIN', 'MANAGER', 'CONTRIBUTOR'],
+  MANAGE_FACTORS: ['ADMIN', 'MANAGER'],
+  MANAGE_GOALS: ['ADMIN', 'MANAGER'],
+  JOIN_CSR: ['CONTRIBUTOR'],
+  APPROVE_CSR: ['ADMIN', 'MANAGER'],
+  ACKNOWLEDGE_POLICY: ['ADMIN', 'MANAGER', 'CONTRIBUTOR'],
+  PUBLISH_POLICY: ['ADMIN', 'MANAGER'],
+  RECORD_AUDIT: ['ADMIN', 'MANAGER'],
+  MANAGE_COMPLIANCE: ['ADMIN', 'MANAGER'],
+  MANAGE_CONFIG: ['ADMIN'],
+  MANAGE_DEPARTMENTS: ['ADMIN'],
 };
 
 export function hasPermission(userRole: Role, permissionRoles: Role[]): boolean {

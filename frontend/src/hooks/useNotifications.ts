@@ -30,7 +30,7 @@ export function useNotifications() {
   });
 
   const notifications = notificationsQuery.data || [];
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return {
     notifications,

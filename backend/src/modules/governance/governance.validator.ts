@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import { ComplianceSeverity, ComplianceStatus } from '@prisma/client';
 
-// Accept both Prisma AuditOutcome values and frontend-friendly aliases
-const auditOutcomeValues = ['COMPLIANT', 'ACTION_REQUIRED', 'PASSED', 'FAILED', 'UNDER_REVIEW'] as const;
+import { AuditOutcome } from '@prisma/client';
 
 export const CreatePolicySchema = z.object({
   body: z.object({
@@ -20,7 +19,7 @@ export const CreateAuditSchema = z.object({
     auditorName: z.string().min(1),
     auditDate: z.string().min(1), // Accept YYYY-MM-DD or ISO 8601
     score: z.number().min(0).max(100),
-    outcome: z.enum(auditOutcomeValues),
+    outcome: z.nativeEnum(AuditOutcome),
     findings: z.string().min(1),
   }),
 });

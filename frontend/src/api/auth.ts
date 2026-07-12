@@ -13,7 +13,6 @@ export const authApi = {
     password: string;
     firstName: string;
     lastName: string;
-    role: string;
     departmentId?: string;
   }): Promise<AuthResponse> => {
     const res = await apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.REGISTER, data);

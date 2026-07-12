@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
@@ -18,6 +19,23 @@ export function FilterBar({
   searchPlaceholder = 'Search records...',
   className,
 }: FilterBarProps) {
+  const [dateStart, setDateStart] = useState('');
+  const [dateEnd, setDateEnd] = useState('');
+
+  const handleDateStartChange = (value: string) => {
+    setDateStart(value);
+    if (onDateChange) {
+      onDateChange(value, dateEnd);
+    }
+  };
+
+  const handleDateEndChange = (value: string) => {
+    setDateEnd(value);
+    if (onDateChange) {
+      onDateChange(dateStart, value);
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -58,13 +76,15 @@ export function FilterBar({
           <div className="flex items-center gap-2">
             <input
               type="date"
-              onChange={(e) => onDateChange(e.target.value, '')}
+              value={dateStart}
+              onChange={(e) => handleDateStartChange(e.target.value)}
               className="h-10 px-2 rounded-md border border-input bg-card text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             />
             <span className="text-muted-foreground text-xs">to</span>
             <input
               type="date"
-              onChange={(e) => onDateChange('', e.target.value)}
+              value={dateEnd}
+              onChange={(e) => handleDateEndChange(e.target.value)}
               className="h-10 px-2 rounded-md border border-input bg-card text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>

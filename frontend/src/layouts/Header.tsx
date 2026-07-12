@@ -80,7 +80,7 @@ export function Header() {
 
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs text-muted-foreground font-semibold">
-                    {notifications.filter(n => !n.read).length} Unread
+                    {notifications.filter(n => !n.isRead).length} Unread
                   </span>
                   <button
                     onClick={() => markAllAsRead()}
@@ -98,9 +98,9 @@ export function Header() {
                     notifications.map((n) => (
                       <div
                         key={n.id}
-                        onClick={() => !n.read && markAsRead(n.id)}
+                        onClick={() => !n.isRead && markAsRead(n.id)}
                         className={`p-3 rounded-lg border text-left cursor-pointer transition-colors ${
-                          n.read
+                          n.isRead
                             ? 'bg-secondary/20 border-border/50 opacity-70'
                             : 'bg-primary/5 border-primary/20 hover:bg-primary/10'
                         }`}

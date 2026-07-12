@@ -3,10 +3,11 @@ import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Trophy, Calendar, Sparkles, UserCheck } from 'lucide-react';
 import { ProgressBar } from '../ui/ProgressBar';
+import { Challenge, ChallengeParticipation } from '../../types/challenge';
 
 interface ChallengeCardProps {
-  challenge: any;
-  participation?: any;
+  challenge: Challenge;
+  participation?: ChallengeParticipation;
   onJoinClick?: (id: string) => void;
   onUpdateClick?: (id: string) => void;
   isJoining?: boolean;
@@ -42,17 +43,17 @@ export function ChallengeCard({
           {/* Rewards details */}
           <div className="mt-5 grid grid-cols-2 gap-2 p-3 bg-secondary/35 rounded-lg border border-border/40 text-center">
             <div>
-              <span className="text-[10px] font-bold text-muted-foreground block uppercase">Points</span>
+              <span className="text-[10px] font-bold text-muted-foreground block uppercase">XP</span>
               <span className="text-sm font-extrabold text-foreground flex items-center justify-center mt-0.5">
                 <Sparkles className="h-3.5 w-3.5 mr-1 text-yellow-500" />
-                {challenge.xp || 100}
+                {challenge.xp} XP
               </span>
             </div>
             <div>
-              <span className="text-[10px] font-bold text-muted-foreground block uppercase">XP Award</span>
+              <span className="text-[10px] font-bold text-muted-foreground block uppercase">Difficulty</span>
               <span className="text-sm font-extrabold text-foreground flex items-center justify-center mt-0.5">
                 <Trophy className="h-3.5 w-3.5 mr-1 text-emerald-500" />
-                {challenge.xp || 100} XP
+                {challenge.difficulty}
               </span>
             </div>
           </div>
@@ -60,7 +61,7 @@ export function ChallengeCard({
 
         {/* Footer options */}
         <div className="mt-6 pt-4 border-t border-border/50">
-          {isJoined && (
+          {isJoined && participation && (
             <div className="mb-4">
               <div className="flex justify-between items-center text-xs text-muted-foreground mb-1.5">
                 <span>Progress</span>

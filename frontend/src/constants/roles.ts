@@ -1,7 +1,7 @@
-import { Role } from '../../../shared/interfaces';
+import { Role } from '../types/auth';
 
 export const USER_ROLES = {
-  ADMIN: Role.ADMIN,
-  MANAGER: Role.MANAGER,
-  CONTRIBUTOR: Role.CONTRIBUTOR,
+  ADMIN: 'ADMIN' as Role,
+  MANAGER: 'MANAGER' as Role,
+  CONTRIBUTOR: 'CONTRIBUTOR' as Role,
 } as const;

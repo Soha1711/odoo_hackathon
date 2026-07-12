@@ -4,10 +4,10 @@ export interface EsgPolicy {
   id: string;
   title: string;
   description: string;
-  url: string | null;
-  departmentId: string | null;
-  categoryId: string | null;
-  status: 'ACTIVE' | 'ARCHIVED';
+  contentUrl: string;
+  version: string;
+  effectiveDate: string;
+  status: string;
   createdAt: string;
   acknowledgments?: PolicyAcknowledgment[];
 }

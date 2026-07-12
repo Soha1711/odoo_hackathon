@@ -3,7 +3,7 @@ export interface Notification {
   userId: string;
   title: string;
   message: string;
-  read: boolean;
-  type: 'COMPLIANCE_ALERT' | 'CHALLENGE_COMPLETED' | 'BADGE_UNLOCKED' | 'APPROVAL_STATUS' | 'SYSTEM';
+  isRead: boolean;
+  type: string;
   createdAt: string;
 }

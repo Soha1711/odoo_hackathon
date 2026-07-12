@@ -3,7 +3,7 @@ import { User } from './auth';
 export interface Reward {
   id: string;
   name: string;
-  description: string | null;
+  description: string;
   pointsRequired: number;
   stock: number;
   status: 'ACTIVE' | 'INACTIVE';
@@ -14,9 +14,9 @@ export interface RewardRedemption {
   id: string;
   userId: string;
   rewardId: string;
-  pointsRedeemed: number;
-  status: 'PENDING' | 'SHIPPED' | 'COMPLETED';
-  createdAt: string;
+  pointsDeducted: number;
+  redemptionDate: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
   user?: User;
   reward?: Reward;
 }

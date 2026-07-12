@@ -35,7 +35,7 @@ export function GovernanceWidget({ issues = [] }: GovernanceWidgetProps) {
                     <span>Due: {new Date(issue.dueDate).toLocaleDateString()}</span>
                   </span>
                 </div>
-                <Badge variant={issue.severity === 'CRITICAL' || issue.severity === 'HIGH' ? 'danger' : 'warning'}>
+                <Badge variant={issue.severity === 'HIGH' ? 'danger' : issue.severity === 'MEDIUM' ? 'warning' : 'outline'}>
                   {issue.severity}
                 </Badge>
               </div>

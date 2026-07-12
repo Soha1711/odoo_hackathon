@@ -1,4 +1,4 @@
-import { Role } from '../../../shared/interfaces';
+import { Role } from './auth';
 
 export interface Employee {
   id: string;

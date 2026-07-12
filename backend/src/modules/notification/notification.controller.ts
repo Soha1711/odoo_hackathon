@@ -26,12 +26,20 @@ export class NotificationController {
         return res.status(401).json({ error: { message: 'Unauthorized' } });
       }
 
-      const notification = await prisma.notification.update({
+      const notification = await prisma.notification.findFirst({
+        where: { id: req.params.id, userId: req.user.id },
+      });
+
+      if (!notification) {
+        return res.status(404).json({ error: { message: 'Notification not found' } });
+      }
+
+      const updated = await prisma.notification.update({
         where: { id: req.params.id },
         data: { isRead: true },
       });
 
-      return res.status(200).json({ message: 'Notification marked as read', data: notification });
+      return res.status(200).json({ message: 'Notification marked as read', data: updated });
     } catch (err) {
       return next(err);
     }

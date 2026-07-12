@@ -1,4 +1,4 @@
-import { Role } from '../../../shared/interfaces';
+export type Role = 'ADMIN' | 'MANAGER' | 'CONTRIBUTOR';
 
 export interface User {
   id: string;

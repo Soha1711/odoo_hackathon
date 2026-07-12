@@ -4,24 +4,27 @@ export interface Challenge {
   id: string;
   title: string;
   description: string;
-  pointsAward: number;
-  xpAward: number;
-  targetValue: number;
-  status: 'ACTIVE' | 'COMPLETED' | 'EXPIRED';
-  startDate: string;
-  endDate: string;
-  categoryId: string | null;
+  xp: number;
+  difficulty: 'EASY' | 'MEDIUM' | 'HARD';
+  evidenceRequired: boolean;
+  deadline: string;
+  status: 'DRAFT' | 'ACTIVE' | 'UNDER_REVIEW' | 'COMPLETED' | 'ARCHIVED';
+  categoryId: string;
   createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ChallengeParticipation {
   id: string;
-  userId: string;
   challengeId: string;
-  currentProgress: number;
+  userId: string;
+  progress: number;
   proofUrl: string | null;
   approvalStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
+  xpAwarded: number;
+  completedAt: string | null;
   createdAt: string;
+  updatedAt?: string;
   user?: User;
   challenge?: Challenge;
 }

@@ -10,8 +10,8 @@ interface CarbonCardProps {
 }
 
 export function CarbonCard({ transaction, onDeleteClick, canDelete = false }: CarbonCardProps) {
-  const isElectricity = transaction.sourceType === 'SCOPE_2_ELECTRICITY';
-  const isTravel = transaction.sourceType === 'SCOPE_3_TRAVEL';
+  const isFleet = transaction.sourceType === 'FLEET';
+  const isExpense = transaction.sourceType === 'EXPENSE';
 
   return (
     <Card hoverable className="overflow-hidden">
@@ -19,11 +19,11 @@ export function CarbonCard({ transaction, onDeleteClick, canDelete = false }: Ca
         <div className="flex items-center space-x-4">
           {/* Custom icon matching scope source */}
           <div className={`p-3 rounded-xl ${
-            isElectricity ? 'bg-amber-100 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400' :
-            isTravel ? 'bg-blue-100 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400' :
+            isExpense ? 'bg-amber-100 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400' :
+            isFleet ? 'bg-blue-100 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400' :
             'bg-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400'
           }`}>
-            {isElectricity ? <Zap className="h-5 w-5" /> : isTravel ? <Plane className="h-5 w-5" /> : <Leaf className="h-5 w-5" />}
+            {isExpense ? <Zap className="h-5 w-5" /> : isFleet ? <Plane className="h-5 w-5" /> : <Leaf className="h-5 w-5" />}
           </div>
 
           <div>

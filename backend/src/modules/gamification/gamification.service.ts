@@ -233,7 +233,7 @@ export class GamificationService {
           });
         }
       } catch (e) {
-        console.error(`Error parsing badge rule for ${badge.name}:`, e);
+        // Skip invalid badge rules
       }
     }
   }

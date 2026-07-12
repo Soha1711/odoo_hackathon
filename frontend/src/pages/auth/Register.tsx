@@ -62,7 +62,6 @@ export function Register() {
         password: values.password,
         firstName: values.firstName,
         lastName: values.lastName,
-        role: 'CONTRIBUTOR',
         departmentId: values.departmentId,
       });
       toast.success('Registration successful! Welcome to EcoSphere.');
