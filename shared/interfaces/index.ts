@@ -3,3 +3,10 @@ export interface IBaseEntity {
   createdAt: Date | string;
   updatedAt?: Date | string;
 }
+
+export enum Role {
+  ADMIN = 'ADMIN',
+  MANAGER = 'MANAGER',
+  CONTRIBUTOR = 'CONTRIBUTOR',
+}
+

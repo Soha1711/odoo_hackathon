@@ -1,0 +1,139 @@
+import { useState } from 'react';
+import { useEnvironmental } from '../../hooks/useEnvironmental';
+import { DonutChart } from '../../components/charts/DonutChart';
+import { StackedBarChart } from '../../components/charts/StackedBarChart';
+import { DataTable, Column } from '../../components/ui/DataTable';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { toast } from '../../components/ui/Toast';
+import { FileBarChart, Download, FileSpreadsheet } from 'lucide-react';
+
+export function Reports() {
+  const { transactions, isLoadingTransactions } = useEnvironmental();
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownload = (format: 'pdf' | 'csv') => {
+    setIsDownloading(true);
+    setTimeout(() => {
+      setIsDownloading(false);
+      toast.success(`EcoSphere ESG report downloaded in ${format.toUpperCase()} format successfully!`);
+    }, 1500);
+  };
+
+  // Compile data for Donut Chart (Emissions by Source Type)
+  const sourceTotals: Record<string, number> = {};
+  transactions.forEach((tx) => {
+    sourceTotals[tx.sourceType] = (sourceTotals[tx.sourceType] || 0) + tx.calculatedEmissions;
+  });
+
+  const donutColors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
+  const donutData = Object.entries(sourceTotals).map(([name, val], idx) => ({
+    name,
+    value: Math.round(val),
+    color: donutColors[idx % donutColors.length],
+  }));
+
+  // Stacked Bar Data (Scope 1, 2, 3 comparison mockup)
+  const stackedData = [
+    { name: 'Q1', 'Scope 1': 4000, 'Scope 2': 2400, 'Scope 3': 2400 },
+    { name: 'Q2', 'Scope 1': 3000, 'Scope 2': 1398, 'Scope 3': 2210 },
+    { name: 'Q3', 'Scope 1': 2000, 'Scope 2': 9800, 'Scope 3': 2290 },
+    { name: 'Q4', 'Scope 1': 2780, 'Scope 2': 3908, 'Scope 3': 2000 },
+  ];
+
+  // Table Columns
+  const columns: Column<any>[] = [
+    { header: 'Reference', accessorKey: 'sourceId' },
+    {
+      header: 'Scope Type',
+      accessorKey: 'sourceType',
+      cell: (item) => <span className="font-semibold text-xs tracking-wide">{item.sourceType}</span>,
+    },
+    {
+      header: 'Quantity Logged',
+      accessorKey: 'quantity',
+      cell: (item) => `${item.quantity} ${item.unit}`,
+    },
+    {
+      header: 'Calculated Impact (kg CO₂e)',
+      accessorKey: 'calculatedEmissions',
+      cell: (item) => <span className="font-bold">{item.calculatedEmissions.toFixed(2)}</span>,
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground flex items-center">
+            <FileBarChart className="h-8 w-8 mr-2.5 text-emerald-500" />
+            Compliance Reporting
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Export comprehensive carbon accounting & regulatory summaries.
+          </p>
+        </div>
+
+        <div className="flex items-center space-x-3">
+          <Button
+            variant="outline"
+            className="flex items-center space-x-1.5"
+            onClick={() => handleDownload('csv')}
+            disabled={isDownloading}
+          >
+            <FileSpreadsheet className="h-4.5 w-4.5" />
+            <span>Export CSV</span>
+          </Button>
+
+          <Button
+            className="flex items-center space-x-1.5"
+            onClick={() => handleDownload('pdf')}
+            disabled={isDownloading}
+          >
+            <Download className="h-4.5 w-4.5" />
+            <span>Export PDF</span>
+          </Button>
+        </div>
+      </div>
+
+      {/* Visual Analytics Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Emission Footprint Breakdown</CardTitle>
+            <CardDescription>Visual summary of total calculated CO₂e emissions by scopes</CardDescription>
+          </CardHeader>
+          <CardContent className="flex items-center justify-center">
+            {donutData.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-10">No emissions logged to chart.</p>
+            ) : (
+              <DonutChart data={donutData} />
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Historical Quarterly Scopes</CardTitle>
+            <CardDescription>Comparison of direct & indirect corporate emission scopes</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <StackedBarChart
+              data={stackedData}
+              keys={['Scope 1', 'Scope 2', 'Scope 3']}
+              colors={['#10b981', '#3b82f6', '#f59e0b']}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Raw emissions table */}
+      <div>
+        <h3 className="text-lg font-bold text-foreground mb-4">Carbon Register Ledger</h3>
+        <DataTable columns={columns} data={transactions} isLoading={isLoadingTransactions} />
+      </div>
+    </div>
+  );
+}
+
+export default Reports;

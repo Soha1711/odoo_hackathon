@@ -7,6 +7,7 @@ import governanceRouter from '../modules/governance/governance.routes';
 import gamificationRouter from '../modules/gamification/gamification.routes';
 import dashboardRouter from '../modules/dashboard/dashboard.routes';
 import reportsRouter from '../modules/reports/reports.routes';
+import notificationRouter from '../modules/notification/notification.routes';
 
 const rootRouter = Router();
 
@@ -20,5 +21,6 @@ rootRouter.use('/governance', governanceRouter);
 rootRouter.use('/gamification', gamificationRouter);
 rootRouter.use('/dashboard', dashboardRouter);
 rootRouter.use('/reports', reportsRouter);
+rootRouter.use('/notifications', notificationRouter);
 
 export default rootRouter;
