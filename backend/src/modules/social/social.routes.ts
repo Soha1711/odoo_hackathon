@@ -14,7 +14,7 @@ router.post('/activities', authMiddleware, requireRole([Role.ADMIN, Role.MANAGER
 
 // Participations
 router.get('/participations', authMiddleware, controller.getParticipations);
-router.post('/activities/:id/join', authMiddleware, requireRole([Role.CONTRIBUTOR]), validateRequest(SubmitParticipationSchema), controller.joinActivity);
+router.post('/activities/:id/join', authMiddleware, requireRole([Role.ADMIN, Role.MANAGER, Role.CONTRIBUTOR]), validateRequest(SubmitParticipationSchema), controller.joinActivity);
 router.patch('/participations/:id/approve', authMiddleware, requireRole([Role.ADMIN, Role.MANAGER]), validateRequest(ApproveParticipationSchema), controller.approveParticipation);
 
 export default router;
