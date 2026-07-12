@@ -126,7 +126,7 @@ export function Reports() {
 
       {/* Visual Analytics Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="overflow-hidden">
+        <Card>
           <CardHeader>
             <CardTitle>Emission Footprint Breakdown</CardTitle>
             <CardDescription>Visual summary of total calculated CO2e emissions by scopes</CardDescription>
@@ -140,7 +140,7 @@ export function Reports() {
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden">
+        <Card>
           <CardHeader>
             <CardTitle>Historical Quarterly Scopes</CardTitle>
             <CardDescription>Comparison of direct & indirect corporate emission scopes</CardDescription>

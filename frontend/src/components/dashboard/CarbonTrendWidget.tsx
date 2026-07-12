@@ -8,7 +8,7 @@ interface CarbonTrendWidgetProps {
 
 export function CarbonTrendWidget({ trends = [] }: CarbonTrendWidgetProps) {
   return (
-    <Card className="col-span-1 lg:col-span-3 overflow-hidden">
+    <Card className="col-span-1 lg:col-span-3">
       <CardHeader>
         <CardTitle className="text-base font-semibold">Carbon Emissions Trend</CardTitle>
         <CardDescription>Monthly CO₂e output comparison (kg CO₂e)</CardDescription>

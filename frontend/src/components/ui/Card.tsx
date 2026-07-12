@@ -12,7 +12,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-all duration-300',
+          'rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-all duration-300 overflow-hidden',
           {
             'glass border-white/20': isGlass,
             'hover:shadow-md hover:translate-y-[-2px]': hoverable,

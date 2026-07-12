@@ -158,7 +158,7 @@ export function Social() {
                   <Card key={part.id} className="p-4 flex items-center justify-between border-l-4 border-l-amber-500">
                     <div>
                       <h5 className="text-sm font-semibold text-foreground">{part.csrActivity?.title}</h5>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                      <p className="text-xs text-muted-foreground mt-0.5 truncate">
                         Logged by: {part.user?.firstName} {part.user?.lastName} ({part.user?.email})
                       </p>
                       {part.proofUrl && (

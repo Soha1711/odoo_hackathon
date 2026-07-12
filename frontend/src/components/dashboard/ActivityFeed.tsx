@@ -35,8 +35,8 @@ export function ActivityFeed({ activities = [] }: ActivityFeedProps) {
                   </span>
 
                   <div>
-                    <h6 className="text-sm font-semibold text-foreground leading-tight">{act.title}</h6>
-                    <p className="text-xs text-muted-foreground mt-0.5">{act.subtitle}</p>
+                    <h6 className="text-sm font-semibold text-foreground leading-tight truncate">{act.title}</h6>
+                    <p className="text-xs text-muted-foreground mt-0.5 truncate">{act.subtitle}</p>
                     <span className="text-[10px] text-muted-foreground/80 font-medium block mt-1">
                       {new Date(act.date).toLocaleDateString()}
                     </span>

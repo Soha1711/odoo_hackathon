@@ -155,7 +155,7 @@ export function Governance() {
                     <p className="text-xs text-muted-foreground mt-0.5">
                       Scope: {a.department?.name || 'Global'} &bull; Date: {new Date(a.auditDate).toLocaleDateString()}
                     </p>
-                    <p className="text-xs text-foreground/80 mt-1.5 italic font-medium">&quot;{a.findings}&quot;</p>
+                    <p className="text-xs text-foreground/80 mt-1.5 italic font-medium line-clamp-2">&quot;{a.findings}&quot;</p>
                   </div>
                   <div className="text-right">
                     <span className="text-2xl font-black block text-foreground">{a.score}</span>
@@ -182,7 +182,7 @@ export function Governance() {
                 <div key={issue.id} className="p-4 bg-card border border-border rounded-xl flex justify-between items-center shadow-sm">
                   <div>
                     <h5 className="text-sm font-bold text-foreground">{issue.title}</h5>
-                    <p className="text-xs text-muted-foreground mt-0.5">{issue.description}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{issue.description}</p>
                     <span className="text-[10px] text-muted-foreground flex items-center space-x-1 mt-1.5">
                       <Calendar className="h-3 w-3" />
                       <span>Due: {new Date(issue.dueDate).toLocaleDateString()}</span>
