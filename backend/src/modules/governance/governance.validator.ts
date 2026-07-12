@@ -19,7 +19,7 @@ export const CreateAuditSchema = z.object({
     auditorName: z.string().min(1),
     auditDate: z.string().min(1), // Accept YYYY-MM-DD or ISO 8601
     score: z.number().min(0).max(100),
-    outcome: z.nativeEnum(AuditOutcome),
+    outcome: z.enum(['COMPLIANT', 'ACTION_REQUIRED', 'PASSED', 'FAILED', 'UNDER_REVIEW']),
     findings: z.string().min(1),
   }),
 });

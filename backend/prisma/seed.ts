@@ -211,7 +211,7 @@ async function main() {
     userCreates.push(
       prisma.user.create({
         data: {
-          email: i === 0 ? 'admin@ecosphere.com' : i === 1 ? 'manager@ecosphere.com' : `${first.toLowerCase()}.${last.toLowerCase()}@ecosphere.com`,
+          email: i === 0 ? 'admin@ecosphere.com' : i === 1 ? 'manager@ecosphere.com' : i === 2 ? 'employee@ecosphere.com' : `${first.toLowerCase()}.${last.toLowerCase()}@ecosphere.com`,
           passwordHash: i === 0 ? adminHash : i === 1 ? managerHash : empHash,
           firstName: first,
           lastName: last,
