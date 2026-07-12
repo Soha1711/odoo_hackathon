@@ -22,10 +22,12 @@ export function Gamification() {
     redeemReward,
     isLoadingChallenges,
     isLoadingRewards,
+    isJoiningChallenge,
+    isRedeemingReward,
   } = useGamification();
 
   const [activeChallengeId, setActiveChallengeId] = useState<string | null>(null);
-  const [progressVal, setProgressVal] = useState(100);
+  const [progressVal, setProgressVal] = useState(0);
   const [proofUrl, setProofUrl] = useState('');
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false);
 
@@ -127,6 +129,7 @@ export function Gamification() {
                     setActiveChallengeId(id);
                     setIsProgressModalOpen(true);
                   }}
+                  isJoining={isJoiningChallenge}
                 />
               );
             })
@@ -160,6 +163,7 @@ export function Gamification() {
                 reward={rw}
                 pointsBalance={user?.pointsBalance || 0}
                 onRedeemClick={handleRedeem}
+                isRedeeming={isRedeemingReward}
               />
             ))
           )}
@@ -175,7 +179,7 @@ export function Gamification() {
             min="0"
             max="100"
             value={progressVal}
-            onChange={(e) => setProgressVal(Number(e.target.value))}
+            onChange={(e) => setProgressVal(Math.min(100, Math.max(0, Number(e.target.value))))}
             required
           />
 

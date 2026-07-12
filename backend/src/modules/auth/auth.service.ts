@@ -8,7 +8,8 @@ export class AuthService {
   private authRepository = new AuthRepository();
 
   async register(dto: CreateUserDto) {
-    const existing = await this.authRepository.findByEmail(dto.email);
+    const normalizedEmail = dto.email.trim().toLowerCase();
+    const existing = await this.authRepository.findByEmail(normalizedEmail);
     if (existing) {
       throw new HttpError(400, 'A user with this email address already exists');
     }
@@ -18,6 +19,7 @@ export class AuthService {
 
     const user = await this.authRepository.createUser({
       ...dto,
+      email: normalizedEmail,
       passwordHash,
     });
 
@@ -26,7 +28,8 @@ export class AuthService {
   }
 
   async login(email: string, passwordHash: string) {
-    const user = await this.authRepository.findByEmail(email);
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await this.authRepository.findByEmail(normalizedEmail);
     if (!user) {
       throw new HttpError(401, 'Invalid email or password');
     }

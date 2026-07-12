@@ -12,7 +12,7 @@ interface GoalCardProps {
 }
 
 export function GoalCard({ goal, onUpdateClick, canUpdate = false }: GoalCardProps) {
-  const percentage = (goal.currentValue / goal.targetValue) * 100;
+  const percentage = goal.targetValue > 0 ? (goal.currentValue / goal.targetValue) * 100 : 0;
   const isCompleted = goal.status === 'COMPLETED' || percentage >= 100;
 
   return (

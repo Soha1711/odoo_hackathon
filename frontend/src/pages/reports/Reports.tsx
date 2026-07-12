@@ -47,7 +47,7 @@ export function Reports() {
   // Compile data for Donut Chart (Emissions by Source Type)
   const sourceTotals: Record<string, number> = {};
   transactions.forEach((tx) => {
-    sourceTotals[tx.sourceType] = (sourceTotals[tx.sourceType] || 0) + tx.calculatedEmissions;
+    sourceTotals[tx.sourceType] = (sourceTotals[tx.sourceType] || 0) + (tx.calculatedEmissions ?? 0);
   });
 
   const donutColors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
@@ -63,11 +63,11 @@ export function Reports() {
     const month = new Date(tx.transactionDate).toLocaleString('default', { month: 'short' });
     if (!sourceByType[month]) sourceByType[month] = { scope1: 0, scope2: 0, scope3: 0 };
     if (tx.sourceType === 'PURCHASE' || tx.sourceType === 'MANUFACTURING' || tx.sourceType === 'FLEET') {
-      sourceByType[month].scope1 += tx.calculatedEmissions;
+      sourceByType[month].scope1 += (tx.calculatedEmissions ?? 0);
     } else if (tx.sourceType === 'EXPENSE') {
-      sourceByType[month].scope2 += tx.calculatedEmissions;
+      sourceByType[month].scope2 += (tx.calculatedEmissions ?? 0);
     } else {
-      sourceByType[month].scope3 += tx.calculatedEmissions;
+      sourceByType[month].scope3 += (tx.calculatedEmissions ?? 0);
     }
   });
 

@@ -13,7 +13,6 @@ export interface ModalProps {
 }
 
 export function Modal({ isOpen, onClose, title, children, className, size = 'md' }: ModalProps) {
-  // Prevent body scroll when open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -24,6 +23,15 @@ export function Modal({ isOpen, onClose, title, children, className, size = 'md'
       document.body.style.overflow = '';
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>

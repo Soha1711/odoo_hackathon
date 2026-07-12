@@ -27,7 +27,7 @@ export function EnvironmentalWidget({ goals = [] }: EnvironmentalWidgetProps) {
             </div>
           ) : (
             activeGoals.map((goal) => {
-              const percentage = (goal.currentValue / goal.targetValue) * 100;
+              const percentage = goal.targetValue > 0 ? (goal.currentValue / goal.targetValue) * 100 : 0;
               return (
                 <div key={goal.id} className="space-y-1.5 p-2 rounded-lg hover:bg-muted/40 transition-colors">
                   <div className="flex justify-between items-center text-sm font-semibold">

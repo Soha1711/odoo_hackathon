@@ -31,7 +31,7 @@ type AuditFormValues = zod.infer<typeof auditSchema>;
 
 export function Governance() {
   const { user } = useAuthContext();
-  const { policies, acks, audits, issues, acknowledgePolicy, createAudit, isLoadingPolicies } = useGovernance();
+  const { policies, acks, audits, issues, acknowledgePolicy, createAudit, isLoadingPolicies, isLoadingAudits } = useGovernance();
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
 
   // Fetch departments
@@ -136,7 +136,12 @@ export function Governance() {
           </div>
 
           <div className="space-y-4">
-            {audits.length === 0 ? (
+            {isLoadingAudits ? (
+              <div className="space-y-4">
+                <Skeleton className="h-24 w-full" />
+                <Skeleton className="h-24 w-full" />
+              </div>
+            ) : audits.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
                 <ClipboardList className="h-8 w-8 mb-2 text-muted-foreground/30" />
                 <p className="text-sm font-medium">No compliance audits recorded yet.</p>

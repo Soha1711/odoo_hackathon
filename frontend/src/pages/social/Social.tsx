@@ -16,13 +16,18 @@ export function Social() {
   const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null);
   const [proofUrl, setProofUrl] = useState('');
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
-  const [isReviewing, setIsReviewing] = useState(false);
+  const [reviewingId, setReviewingId] = useState<string | null>(null);
 
   const isManagement = user?.role === 'ADMIN' || user?.role === 'MANAGER';
 
   const handleJoinSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedActivityId) return;
+
+    if (!proofUrl || proofUrl.trim() === '') {
+      toast.error('Please upload volunteer proof before submitting.');
+      return;
+    }
 
     try {
       await joinActivity({ activityId: selectedActivityId, proofUrl });
@@ -37,13 +42,13 @@ export function Social() {
 
   const handleReview = async (participationId: string, status: 'APPROVED' | 'REJECTED') => {
     try {
-      setIsReviewing(true);
+      setReviewingId(participationId);
       await reviewParticipation({ participationId, approvalStatus: status });
       toast.success(`CSR participation marked as ${status.toLowerCase()}.`);
     } catch (err: any) {
       toast.error(err.message || 'Failed to review participation.');
     } finally {
-      setIsReviewing(false);
+      setReviewingId(null);
     }
   };
 
@@ -171,7 +176,7 @@ export function Social() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        disabled={isReviewing}
+                        disabled={reviewingId !== null}
                         className="text-emerald-500 hover:bg-emerald-500/10 p-2 rounded-full"
                         onClick={() => handleReview(part.id, 'APPROVED')}
                       >
@@ -180,7 +185,7 @@ export function Social() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        disabled={isReviewing}
+                        disabled={reviewingId !== null}
                         className="text-red-500 hover:bg-red-500/10 p-2 rounded-full"
                         onClick={() => handleReview(part.id, 'REJECTED')}
                       >

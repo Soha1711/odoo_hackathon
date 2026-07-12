@@ -13,7 +13,7 @@ import { GovernanceWidget } from '../../components/dashboard/GovernanceWidget';
 import { Skeleton } from '../../components/ui/Skeleton';
 
 export function Dashboard() {
-  const { summary, isLoading: isLoadingSummary } = useDashboard();
+  const { summary, isLoading: isLoadingSummary, error: summaryError } = useDashboard();
   const { goals, isLoadingGoals } = useEnvironmental();
   const { activities, isLoadingActivities } = useSocial();
   const { issues, isLoadingIssues } = useGovernance();
@@ -40,6 +40,16 @@ export function Dashboard() {
           <Skeleton className="h-40" />
           <Skeleton className="h-40" />
         </div>
+      </div>
+    );
+  }
+
+  if (summaryError) {
+    return (
+      <div className="h-[60vh] flex flex-col items-center justify-center text-center p-8">
+        <div className="text-5xl mb-4">&#9888;</div>
+        <h2 className="text-xl font-bold text-foreground mb-2">Failed to load dashboard</h2>
+        <p className="text-sm text-muted-foreground">Please check your connection and try again.</p>
       </div>
     );
   }

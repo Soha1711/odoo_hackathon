@@ -66,7 +66,7 @@ export class GamificationService {
 
     // If progress reaches 100% and NO evidence is required, we can auto-submit it or auto-approve it
     // To match ERP workflows, let's keep it pending review if evidence is required, or auto-complete it
-    if (progress === 100 && !participation.challenge.evidenceRequired) {
+    if (progress >= 100 && !participation.challenge.evidenceRequired) {
       // Auto-approve since no evidence is required
       await this.reviewParticipation(participation.id, ApprovalStatus.APPROVED);
     }
