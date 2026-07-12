@@ -1,8 +1,6 @@
 import { z } from 'zod';
 import { ComplianceSeverity, ComplianceStatus } from '@prisma/client';
 
-import { AuditOutcome } from '@prisma/client';
-
 export const CreatePolicySchema = z.object({
   body: z.object({
     title: z.string().min(1),

@@ -29,6 +29,7 @@ export class AuthController {
             departmentId: user.departmentId,
             xpBalance: user.xpBalance,
             pointsBalance: user.pointsBalance,
+            department: user.department || null,
           },
         },
       });
@@ -55,6 +56,7 @@ export class AuthController {
             departmentId: user.departmentId,
             xpBalance: user.xpBalance,
             pointsBalance: user.pointsBalance,
+            department: user.department || null,
           },
         },
       });
