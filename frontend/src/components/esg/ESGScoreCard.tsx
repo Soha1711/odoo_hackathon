@@ -16,7 +16,7 @@ export function ESGScoreCard({
   overallScore = 0,
 }: ESGScoreCardProps) {
   return (
-    <Card className="col-span-1 lg:col-span-3">
+    <Card className="col-span-1 lg:col-span-3 overflow-hidden">
       <CardHeader className="pb-2">
         <CardTitle>ESG Scorecard</CardTitle>
         <CardDescription>Real-time corporate sustainability indices</CardDescription>

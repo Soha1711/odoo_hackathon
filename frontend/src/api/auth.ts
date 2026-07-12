@@ -1,6 +1,6 @@
 import apiClient from './client';
 import { API_ENDPOINTS } from '../constants/api';
-import { AuthResponse } from '../types/auth';
+import { AuthResponse, User } from '../types/auth';
 
 export const authApi = {
   login: async (credentials: { email: string; password: string }): Promise<AuthResponse> => {
@@ -19,8 +19,8 @@ export const authApi = {
     return res.data;
   },
 
-  getMe: async (): Promise<AuthResponse> => {
-    const res = await apiClient.get<AuthResponse>(API_ENDPOINTS.AUTH.ME);
+  getMe: async (): Promise<{ data: User }> => {
+    const res = await apiClient.get<{ data: User }>(API_ENDPOINTS.AUTH.ME);
     return res.data;
   },
 };

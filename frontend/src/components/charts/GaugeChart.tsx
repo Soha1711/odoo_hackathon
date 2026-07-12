@@ -26,7 +26,7 @@ export function GaugeChart({ value, title, size = 200 }: GaugeChartProps) {
   return (
     <div className="flex flex-col items-center justify-center p-4">
       <div className="relative" style={{ width: size, height: size / 2 + 20 }}>
-        <svg width={size} height={size / 2 + 20} className="overflow-visible">
+        <svg width={size} height={size / 2 + 20} className="overflow-hidden">
           {/* Background Arc */}
           <path
             d={`M ${center - radius} ${center} A ${radius} ${radius} 0 0 1 ${center + radius} ${center}`}

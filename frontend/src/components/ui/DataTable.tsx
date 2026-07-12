@@ -29,7 +29,7 @@ export function DataTable<T>({
         <thead className="text-xs uppercase bg-secondary/50 text-muted-foreground border-b border-border/50">
           <tr>
             {columns.map((col, idx) => (
-              <th key={idx} scope="col" className="px-6 py-4 font-semibold tracking-wider">
+              <th key={idx} scope="col" className="px-3 sm:px-6 py-4 font-semibold tracking-wider">
                 {col.header}
               </th>
             ))}
@@ -60,7 +60,7 @@ export function DataTable<T>({
                     ? col.cell(item)
                     : (item[col.accessorKey as keyof T] as unknown as React.ReactNode);
                   return (
-                    <td key={cIdx} className="px-6 py-4 text-sm font-medium">
+                      <td key={cIdx} className="px-3 sm:px-6 py-4 text-sm font-medium">
                       {val}
                     </td>
                   );

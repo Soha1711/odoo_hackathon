@@ -27,7 +27,7 @@ export function Reports() {
       tx.transactionDate ? new Date(tx.transactionDate).toLocaleDateString() : 'N/A',
     ]);
 
-    const csvContent = [headers, ...rows]
+    const csvContent = '\uFEFF' + [headers, ...rows]
       .map((row) => row.map((cell: any) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
       .join('\n');
 
@@ -39,7 +39,7 @@ export function Reports() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 200);
 
     toast.success(`ESG report exported as CSV successfully! (${transactions.length} records)`);
   };
@@ -126,7 +126,7 @@ export function Reports() {
 
       {/* Visual Analytics Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader>
             <CardTitle>Emission Footprint Breakdown</CardTitle>
             <CardDescription>Visual summary of total calculated CO2e emissions by scopes</CardDescription>
@@ -140,7 +140,7 @@ export function Reports() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader>
             <CardTitle>Historical Quarterly Scopes</CardTitle>
             <CardDescription>Comparison of direct & indirect corporate emission scopes</CardDescription>
