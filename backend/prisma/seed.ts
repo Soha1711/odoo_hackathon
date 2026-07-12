@@ -619,7 +619,7 @@ async function main() {
     { title: 'Badge Upgrade Available', message: 'You are 2 challenges away from earning Sustainability Champion badge.', type: 'BADGE_UNLOCK' },
     { title: 'Monthly ESG Report Ready', message: 'Your department ESG report for this month is ready for review.', type: 'POLICY_REMINDER' },
     { title: 'Reward Shipped', message: 'Your Eco Coffee Mug reward has been shipped. Track your delivery.', type: 'APPROVAL' },
-    { title: 'Audit Scheduled', description: 'Your department has an upcoming compliance audit next week.', type: 'COMPLIANCE_ISSUE' },
+    { title: 'Audit Scheduled', message: 'Your department has an upcoming compliance audit next week.', type: 'COMPLIANCE_ISSUE' },
     { title: 'New CSR Activity', message: 'Community Garden Build is now accepting volunteers. 160 XP available!', type: 'BADGE_UNLOCK' },
     { title: 'Policy Renewal Required', message: 'Data Privacy & Protection Policy v2.0 requires re-acknowledgment.', type: 'POLICY_REMINDER' },
     { title: 'Sustainability Milestone', message: 'Your department has reduced carbon emissions by 15% this quarter!', type: 'BADGE_UNLOCK' },

@@ -76,7 +76,7 @@ export function ToastContainer() {
               'pointer-events-auto flex items-center justify-between w-full p-4 rounded-xl border shadow-lg bg-card text-foreground',
               {
                 'border-emerald-500/30 bg-emerald-500/5 dark:bg-emerald-950/20': t.type === 'success',
-                'border-red-500/30 bg-red-500/5 dark:bg-red-950/20': t.type === 'error',
+                'border-red-400/25 bg-red-50 dark:bg-red-950/15 shadow-red-500/5': t.type === 'error',
                 'border-amber-500/30 bg-amber-500/5 dark:bg-amber-950/20': t.type === 'warning',
                 'border-blue-500/30 bg-blue-500/5 dark:bg-blue-950/20': t.type === 'info',
               }
@@ -84,7 +84,7 @@ export function ToastContainer() {
           >
             <div className="flex items-center space-x-3">
               {t.type === 'success' && <CheckCircle2 className="h-5 w-5 text-emerald-500" />}
-              {t.type === 'error' && <AlertCircle className="h-5 w-5 text-red-500" />}
+              {t.type === 'error' && <AlertCircle className="h-5 w-5 text-red-400" />}
               {t.type === 'warning' && <AlertTriangle className="h-5 w-5 text-amber-500" />}
               {t.type === 'info' && <Info className="h-5 w-5 text-blue-500" />}
               <span className="text-sm font-medium">{t.message}</span>

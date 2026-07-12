@@ -17,7 +17,7 @@ export function useAuth() {
       if (!token) return null;
       try {
         const response = await authApi.getMe();
-        return response.data.user;
+        return response.data;
       } catch (err) {
         localStorage.removeItem('ecosphere_token');
         return null;
