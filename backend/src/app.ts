@@ -1,25 +1,24 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import rootRouter from './routes';
+import { errorMiddleware } from './middleware/error.middleware';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: '*', // For hackathon/development environment simplicity
+}));
 app.use(express.json());
 
 // Base diagnostic endpoint
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
-// App starter listener
-if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-    console.log(`EcoSphere ESG Platform server running on port ${PORT}`);
-  });
-}
+// Mount modular APIs
+app.use('/api/v1', rootRouter);
+
+// Error Handling
+app.use(errorMiddleware);
 
 export default app;

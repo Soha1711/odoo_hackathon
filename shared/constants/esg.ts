@@ -1,0 +1,53 @@
+export const DEFAULT_ESG_WEIGHTS = {
+  ENVIRONMENTAL: 0.40,
+  SOCIAL: 0.30,
+  GOVERNANCE: 0.30,
+};
+
+export const TRANSACTION_SOURCE_TYPES = {
+  PURCHASE: 'PURCHASE',
+  MANUFACTURING: 'MANUFACTURING',
+  EXPENSE: 'EXPENSE',
+  FLEET: 'FLEET',
+} as const;
+
+export const DIFFICULTY_LEVELS = {
+  EASY: 'EASY',
+  MEDIUM: 'MEDIUM',
+  HARD: 'HARD',
+} as const;
+
+export const CHALLENGE_STATUSES = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  UNDER_REVIEW: 'UNDER_REVIEW',
+  COMPLETED: 'COMPLETED',
+  ARCHIVED: 'ARCHIVED',
+} as const;
+
+export const APPROVAL_STATUSES = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+} as const;
+
+export const COMPLIANCE_SEVERITIES = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+} as const;
+
+export const COMPLIANCE_STATUSES = {
+  OPEN: 'OPEN',
+  RESOLVED: 'RESOLVED',
+} as const;
+
+export const AUDIT_OUTCOMES = {
+  COMPLIANT: 'COMPLIANT',
+  ACTION_REQUIRED: 'ACTION_REQUIRED',
+} as const;
+
+export const CATEGORY_TYPES = {
+  CSR_ACTIVITY: 'CSR_ACTIVITY',
+  CHALLENGE: 'CHALLENGE',
+} as const;
